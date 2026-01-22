@@ -1,322 +1,360 @@
-# DIGIT Studio API Automation Framework
+# DIGIT Studio Automation Test Suite
 
-Automated API testing framework for DIGIT Studio Services using Python pytest.
+Automated testing framework for DIGIT Studio Services - covering MDMS configuration, public service initialization, application workflows, and checklist management.
 
 ## 📁 Project Structure
 
 ```
 studio_automation_script/
-├── tests/
-│   ├── test_studio_services.py          # MDMS & Public Service tests
-│   ├── test_application.py              # Application Create/Update tests
-│   ├── test_application_search.py       # Application Search tests
-│   ├── test_inbox_search.py             # Inbox Search tests
-│   ├── test_roles_search.py             # Roles validation tests
-│   ├── test_workflow_search.py          # Workflow validation tests
-│   ├── test_actions_roleactions_search.py # Actions & Roleactions tests
-│   ├── test_idgen_search.py             # ID Generation format tests
-│   └── test_process_instance_search.py  # Process Instance/Workflow history tests
-├── payloads/
+├── test_e2e_flow.py              # Main E2E test orchestrator (21 tests)
+├── conftest.py                   # Pytest configuration & 15-min wait logic
+├── pytest.ini                    # Pytest settings
+│
+├── tests/                        # Individual test modules
+│   ├── test_studio_services.py   # MDMS & Public Service Init
+│   ├── test_application.py       # Application Create/Assign/Resolve
+│   ├── test_checklist_create.py  # Checklist submission
+│   ├── test_checklist_search.py  # Checklist verification
+│   ├── test_actions_roleactions_search.py
+│   ├── test_roles_search.py
+│   ├── test_workflow_search.py
+│   ├── test_idgen_search.py
+│   ├── test_localization_search.py
+│   ├── test_individual_search.py
+│   ├── test_process_instance_search.py
+│   ├── test_application_search.py
+│   └── test_inbox_search.py
+│
+├── utils/                        # Utility modules
+│   ├── auth.py                   # Authentication (get_auth_token)
+│   ├── config.py                 # Configuration (BASE_URL, tenantId)
+│   ├── request_info.py           # RequestInfo payload builder
+│   └── data_loader.py            # JSON payload loader
+│
+├── payloads/                     # JSON request payloads
 │   ├── mdms/
-│   │   └── mdms_service_create.json     # MDMS service configuration payload
-│   └── public_service/
-│       ├── public_service_init.json     # Public service init payload
-│       ├── create_application.json      # Application create payload
-│       └── update_application.json      # Application update payload
-├── utils/
-│   ├── api_client.py                    # API client with auth
-│   ├── auth.py                          # Authentication helper
-│   ├── config.py                        # Configuration (BASE_URL, tenantId)
-│   ├── data_loader.py                   # JSON payload loader
-│   └── request_info.py                  # RequestInfo builder
-├── output/                              # Test output files (auto-generated)
-│   ├── mdms_response.json
-│   ├── public_service_response.json
-│   └── application_response.json
-├── .env                                 # Environment variables
-├── pytest.ini                           # Pytest configuration
-└── README.md                            # This file
+│   │   ├── mdms_draft_create.json
+│   │   └── mdms_service_create.json
+│   ├── application/
+│   │   ├── application_create.json
+│   │   └── workflow_update.json
+│   └── checklist/
+│       ├── create_checklist.json
+│       └── update_checklist.json
+│
+├── output/                       # Runtime output files
+│   ├── mdms_response.json        # Service configuration details
+│   ├── application_response.json # Application details
+│   └── checklist_response.json   # Checklist submission details
+│
+└── reports/                      # HTML test reports
+    └── e2e_report.html
 ```
 
 ## 🔧 Setup
 
-### 1. Install Dependencies
+### Prerequisites
+
+- Python 3.10+
+- pip
+
+### Installation
 
 ```bash
-pip install pytest requests python-dotenv --break-system-packages
+# Clone or download the project
+cd studio_automation_script
+
+# Install dependencies
+pip install pytest requests pytest-html pytest-metadata
 ```
 
-### 2. Configure Environment
+### Configuration
 
-Create `.env` file:
+Edit `utils/config.py`:
 
-```env
-BASE_URL=https://unified-uat.digit.org
-TENANTID=st
-USERNAME=your_username
-PASSWORD=your_password
-USERTYPE=EMPLOYEE
-CLIENT_AUTH_HEADER=Basic ZWdvdi11c2VyLWNsaWVudDo=
+```python
+BASE_URL = "https://unified-uat.digit.org"
+tenantId = "st"
 ```
 
-### 3. Copy Test Files
+Edit `utils/auth.py` with your credentials:
 
-```bash
-# Copy all test files to tests/ directory
-cp ~/Downloads/test_*.py tests/
+```python
+users = {
+    "user": {
+        "username": "your_username",
+        "password": "your_password"
+    }
+}
+```
 
-# Copy payload files
-cp ~/Downloads/create_application.json payloads/public_service/
-cp ~/Downloads/update_application.json payloads/public_service/
+Edit `utils/request_info.py` with your user details:
+
+```python
+def get_request_info(token: str) -> dict:
+    return {
+        "apiId": "Rainmaker",
+        "authToken": token,
+        "userInfo": {
+            "id": 120641,
+            "userName": "YourUser",
+            "uuid": "your-user-uuid",
+            "tenantId": "st",
+            "roles": [...]
+        }
+    }
 ```
 
 ## 🚀 Running Tests
 
-### Complete End-to-End Flow
+### Full E2E Flow (Recommended)
 
-Run tests in this order for complete service setup and application flow:
-
-```bash
-# Step 1: Create MDMS Service Configuration
-pytest tests/test_studio_services.py::test_mdms_service_create -v
-
-# Step 2: Initialize Public Service
-pytest tests/test_studio_services.py::test_public_service_init -v
-
-# Step 3: Verify Service Setup
-pytest tests/test_roles_search.py::test_roles_search -v
-pytest tests/test_workflow_search.py::test_workflow_search -v
-pytest tests/test_idgen_search.py::test_idgen_search -v
-pytest tests/test_actions_roleactions_search.py::test_actions_search -v
-pytest tests/test_actions_roleactions_search.py::test_roleactions_search -v
-
-# Step 4: Create Application
-pytest tests/test_application.py::test_application_create -v
-
-# Step 5: Verify Application Created
-pytest tests/test_application_search.py::test_application_search -v
-pytest tests/test_inbox_search.py::test_inbox_search -v
-pytest tests/test_process_instance_search.py::test_process_instance_after_create -v
-
-# Step 6: Assign Application
-pytest tests/test_application.py::test_application_assign -v
-pytest tests/test_process_instance_search.py::test_process_instance_after_assign -v
-
-# Step 7: Resolve Application
-pytest tests/test_application.py::test_application_resolve -v
-pytest tests/test_process_instance_search.py::test_process_instance_after_resolve -v
-
-# Step 8: Validate Complete Flow
-pytest tests/test_process_instance_search.py::test_process_instance_validate_flow -v
-```
-
-### Quick Test Commands
+Runs all 21 tests in sequence with 15-minute wait after service initialization:
 
 ```bash
-# Complete Studio Setup (MDMS + Public Service)
-pytest tests/test_studio_services.py::test_complete_studio_setup -v
-
-# Complete Application Flow (Create + Assign + Resolve)
-pytest tests/test_application.py::test_complete_application_flow -v
-
-# Run All Tests in a File
-pytest tests/test_studio_services.py -v
-pytest tests/test_application.py -v
+pytest test_e2e_flow.py -v -s --html=reports/e2e_report.html --self-contained-html
 ```
 
-## 📋 Test Files Reference
+### Individual Test Phases
 
-### 1. test_studio_services.py
+#### Phase 1: Service Setup
+```bash
+# Create MDMS Draft
+pytest tests/test_studio_services.py::test_mdms_draft_create -v -s
 
-| Test | Description |
-|------|-------------|
-| `test_mdms_service_create` | Creates MDMS service configuration with random module/service names |
-| `test_public_service_init` | Initializes public service |
-| `test_complete_studio_setup` | Runs both in sequence |
+# Publish MDMS Service
+pytest tests/test_studio_services.py::test_mdms_service_create -v -s
 
-### 2. test_application.py
+# Initialize Public Service
+pytest tests/test_studio_services.py::test_public_service_init -v -s
 
-| Test | Description |
-|------|-------------|
-| `test_application_create` | Creates new application |
-| `test_application_assign` | ASSIGN workflow action |
-| `test_application_resolve` | RESOLVE workflow action |
-| `test_complete_application_flow` | Runs Create → Assign → Resolve |
+# Complete setup (all 3)
+pytest tests/test_studio_services.py::test_complete_studio_setup -v -s
+```
 
-### 3. test_application_search.py
+#### Phase 2: Verification (after 15-min wait)
+```bash
+pytest tests/test_actions_roleactions_search.py -v -s
+pytest tests/test_checklist_search.py -v -s
+pytest tests/test_idgen_search.py -v -s
+pytest tests/test_localization_search.py -v -s
+pytest tests/test_roles_search.py -v -s
+pytest tests/test_workflow_search.py -v -s
+```
 
-| Test | Description |
-|------|-------------|
-| `test_application_search` | Search & validate application by number |
-| `test_application_search_by_service_code` | Search all apps by service code |
+#### Phase 3: Application Flow
+```bash
+# Create application
+pytest tests/test_application.py::test_application_create -v -s
 
-### 4. test_inbox_search.py
+# Submit checklists for current state
+pytest tests/test_checklist_create.py::test_checklist_for_current_state -v -s
 
-| Test | Description |
-|------|-------------|
-| `test_inbox_search` | Search inbox for application |
-| `test_inbox_search_validate_application` | Validate application details in inbox |
+# Assign application
+pytest tests/test_application.py::test_application_assign -v -s
 
-### 5. test_roles_search.py
+# Resolve application
+pytest tests/test_application.py::test_application_resolve -v -s
 
-| Test | Description |
-|------|-------------|
-| `test_roles_search` | Search roles for service |
-| `test_roles_validate` | Assert expected roles exist |
-| `test_search_specific_role` | Search specific role by code |
+# Complete flow (Create → Assign → Resolve)
+pytest tests/test_application.py::test_complete_application_flow -v -s
+```
 
-### 6. test_workflow_search.py
+#### Phase 4: Search & Verification
+```bash
+pytest tests/test_individual_search.py -v -s
+pytest tests/test_process_instance_search.py -v -s
+pytest tests/test_application_search.py -v -s
+pytest tests/test_inbox_search.py -v -s
+```
 
-| Test | Description |
-|------|-------------|
-| `test_workflow_search` | Search workflow for service |
-| `test_workflow_validate` | Validate workflow states/actions |
-| `test_workflow_states_and_actions` | Assert all states/actions exist |
-
-### 7. test_actions_roleactions_search.py
-
-| Test | Description |
-|------|-------------|
-| `test_actions_search` | Search actions-test for service |
-| `test_roleactions_search` | Search roleactions for service roles |
-| `test_actions_validate` | Validate actions exist |
-| `test_roleactions_validate` | Validate roleactions exist |
-| `test_service_access_config` | Complete validation of both |
-
-### 8. test_idgen_search.py
-
-| Test | Description |
-|------|-------------|
-| `test_idgen_search` | Search idgen formats for service |
-| `test_idgen_validate` | Assert expected idgens exist |
-| `test_idgen_format_details` | Get detailed format info |
-
-### 9. test_process_instance_search.py
-
-| Test | Description |
-|------|-------------|
-| `test_process_instance_search` | Search process instance history |
-| `test_process_instance_after_create` | Verify after APPLIED action |
-| `test_process_instance_after_assign` | Verify after ASSIGN action |
-| `test_process_instance_after_resolve` | Verify after RESOLVE action |
-| `test_process_instance_validate_flow` | Validate complete workflow flow |
-
-## 🔄 Workflow Flow
+## 📋 Test Flow Overview
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        SERVICE SETUP                                 │
-├─────────────────────────────────────────────────────────────────────┤
-│  MDMS Create ──► Public Service Init ──► Roles/Workflow/Idgen       │
-└─────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                    PHASE 1: SERVICE SETUP                       │
+├─────────────────────────────────────────────────────────────────┤
+│ 1. test_01_mdms_draft_create      → Create MDMS draft           │
+│ 2. test_02_mdms_service_create    → Publish service config      │
+│ 3. test_03_public_service_init    → Initialize public service   │
+└─────────────────────────────────────────────────────────────────┘
                               │
                               ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                      APPLICATION FLOW                                │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                      │
-│  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐       │
-│  │  CREATE  │───►│  ASSIGN  │───►│  RESOLVE │───►│ COMPLETE │       │
-│  │ (APPLIED)│    │          │    │          │    │          │       │
-│  └──────────┘    └──────────┘    └──────────┘    └──────────┘       │
-│       │               │               │               │              │
-│       ▼               ▼               ▼               ▼              │
-│  PENDING_FOR    PENDING_AT_LME    RESOLVED       RESOLVED           │
-│  ASSIGNMENT                                                          │
-│                                                                      │
-└─────────────────────────────────────────────────────────────────────┘
+                    ⏳ 15-MINUTE WAIT
+                  (System initialization)
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                 PHASE 2: VERIFY SERVICE SETUP                   │
+├─────────────────────────────────────────────────────────────────┤
+│ 4. test_04_actions_search         → Verify actions created      │
+│ 5. test_05_roleactions_search     → Verify role-actions         │
+│ 6. test_06_checklist_search       → Verify checklist defs       │
+│ 7. test_07_idgen_search           → Verify ID generation        │
+│ 8. test_08_localization_search    → Verify localizations        │
+│ 9. test_09_roles_search           → Verify roles                │
+│ 10. test_10_workflow_validate     → Verify workflow states      │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                  PHASE 3: APPLICATION FLOW                      │
+├─────────────────────────────────────────────────────────────────┤
+│ 11. test_11_application_create    → Create application          │
+│     State: APPLIED → PENDING_FOR_ASSIGNMENT                     │
+│                                                                 │
+│ 12. test_12_checklist_submit      → Submit all checklists       │
+│                                                                 │
+│ 13. test_13_individual_search     → Verify applicant            │
+│                                                                 │
+│ 14. test_14_process_instance      → Verify process (create)     │
+│                                                                 │
+│ 15. test_15_application_assign    → Assign application          │
+│     State: PENDING_FOR_ASSIGNMENT → PENDING_AT_LME              │
+│                                                                 │
+│ 16. test_16_process_instance      → Verify process (assign)     │
+│                                                                 │
+│ 17. test_17_application_resolve   → Resolve application         │
+│     State: PENDING_AT_LME → RESOLVED                            │
+│                                                                 │
+│ 18. test_18_process_instance      → Verify process (resolve)    │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                 PHASE 4: FINAL VERIFICATION                     │
+├─────────────────────────────────────────────────────────────────┤
+│ 19. test_19_application_search    → Search by app number        │
+│ 20. test_20_search_by_service     → Search by service code      │
+│ 21. test_21_inbox_search          → Verify inbox                │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-## 📝 Output Files
+## 📊 Output Files
 
-Tests save responses to `output/` directory:
+### `output/mdms_response.json`
+```json
+{
+  "module": "ModuleXYZ",
+  "service": "ServiceABC",
+  "service_code": "ModuleXYZ-ServiceABC-svc-2026-01-22-...",
+  "unique_id": "...",
+  "status": "created"
+}
+```
 
-| File | Description |
-|------|-------------|
-| `mdms_response.json` | Module, service, id from MDMS create |
-| `public_service_response.json` | Service code, id, status |
-| `application_response.json` | Application details for updates |
+### `output/application_response.json`
+```json
+{
+  "module": "ModuleXYZ",
+  "service": "ServiceABC",
+  "application_id": "uuid-...",
+  "application_number": "ModuleXYZ-ServiceABC-app-2026-01-22-...",
+  "workflow_status": "PENDING_FOR_ASSIGNMENT",
+  "mobile_number": "9876543210"
+}
+```
 
-## ⚠️ Important Notes
+### `output/checklist_response.json`
+```json
+{
+  "module": "ModuleXYZ",
+  "service": "ServiceABC",
+  "state": "PENDING_FOR_ASSIGNMENT",
+  "checklist_code": "ServiceABC.PENDING_FOR_ASSIGNMENT.complaint details",
+  "service_id": "uuid-...",
+  "status": "submitted"
+}
+```
 
-1. **Run in Order**: Tests depend on previous test outputs. Run MDMS → Public Service → Application in sequence.
+## 📈 HTML Reports
 
-2. **Fresh Data**: Each `test_mdms_service_create` generates new random module/service names to avoid duplicates.
+Reports are generated in `reports/` directory:
 
-3. **Server Availability**: If you get `503 Service Unavailable`, wait and retry.
+```bash
+# View report
+open reports/e2e_report.html
+# or
+xdg-open reports/e2e_report.html
+```
 
-4. **Auth Token**: Uses `auth-token` header for search APIs, `Authorization: Bearer` for create/update APIs.
+Report includes:
+- Test name and description
+- Pass/Fail status
+- Execution time
+- Custom result details (Module, Service, IDs, etc.)
+
+## ⚙️ Customization
+
+### Modify Service Configuration
+
+Edit `payloads/mdms/mdms_service_create.json`:
+
+```json
+{
+  "Mdms": {
+    "data": {
+      "workflow": [...],
+      "checklist": [...],
+      "roleactions": [...],
+      "idgen": [...],
+      "localization": [...]
+    }
+  }
+}
+```
+
+### Change Wait Time
+
+Edit `conftest.py`:
+
+```python
+WAIT_MINUTES = 15  # Change to desired minutes
+```
+
+### Add New Roles
+
+Edit `payloads/mdms/mdms_service_create.json` → `roleactions` section.
 
 ## 🐛 Troubleshooting
 
-### Service Already Exists Error
-```bash
-# Generate fresh module/service names
-pytest tests/test_studio_services.py::test_mdms_service_create -v
-```
+### Checklist not showing in UI
+- Ensure `clientId` in request matches logged-in user's UUID
+- Verify `accountId` is the application's ID
+- Check `dataType` uses lowercase `"text"` for Text fields
 
-### File Not Found Error
-```bash
-# Ensure payload files exist
-ls payloads/public_service/
-# Should show: create_application.json, update_application.json, public_service_init.json
-```
+### Service initialization failed
+- Wait full 15 minutes after `public_service_init`
+- Check if service already exists (unique constraint)
 
-### 401 Unauthorized Error
-- Check `.env` credentials
-- Search APIs need `auth-token` header
+### Authentication errors
+- Verify credentials in `utils/auth.py`
+- Check token expiration
+- Ensure user has required roles (STUDIO_ADMIN, MDMS_ADMIN)
 
-### 500 Server Error
-- Check payload structure
-- Verify placeholders are replaced
-- Check server logs
+### Test order issues
+- Always run tests in sequence (use `test_e2e_flow.py`)
+- Tests depend on output files from previous tests
 
-## 📊 Expected Validations
+## 📝 Available Tests Summary
 
-### Roles Created
-- `{Module}_{Service}_COMPLAINT_EVALUATOR`
-- `{Module}_{Service}_EMPLOYEE_VIEW`
-
-### Workflow States
-- `PENDING_FOR_ASSIGNMENT`
-- `PENDING_AT_LME`
-- `REJECTED`
-- `RESOLVED`
-
-### Workflow Actions
-- `APPLIED`, `ASSIGN`, `REJECT`, `REASSIGN`, `RESOLVE`, `REOPEN`
-
-### Idgen Formats
-- Application: `{module}-{service}-app-[cy:yyyy-MM-dd]-[SEQ_PUBLIC_APPLICATION]`
-- Service: `{module}-{service}-svc-[cy:yyyy-MM-dd]-[SEQ_PUBLIC_APPLICATION]`
+| Test File | Tests | Description |
+|-----------|-------|-------------|
+| `test_studio_services.py` | 4 | MDMS draft, create, public service init |
+| `test_application.py` | 4 | Create, assign, resolve, complete flow |
+| `test_checklist_create.py` | 2 | Submit checklist for current/all states |
+| `test_checklist_search.py` | 2 | Search and validate checklists |
+| `test_actions_roleactions_search.py` | 2 | Verify actions and roleactions |
+| `test_roles_search.py` | 1 | Verify roles |
+| `test_workflow_search.py` | 1 | Validate workflow states |
+| `test_idgen_search.py` | 1 | Verify ID generation formats |
+| `test_localization_search.py` | 1 | Verify localizations |
+| `test_individual_search.py` | 1 | Search individual/applicant |
+| `test_process_instance_search.py` | 3 | Verify process at each stage |
+| `test_application_search.py` | 2 | Search applications |
+| `test_inbox_search.py` | 1 | Verify inbox |
+| `test_e2e_flow.py` | 21 | Complete E2E orchestrator |
 
 ## 📄 License
 
-pytest tests/test_application.py::test_application_create -v
-pytest tests/test_application.py::test_application_assign -v
-pytest tests/test_application.py::test_application_resolve -v
-pytest tests/test_application.py::test_complete_application_flow -v
-
-pytest tests/test_studio_services.py::test_mdms_service_create -v
-pytest tests/test_studio_services.py::test_public_service_init -v
-pytest tests/test_studio_services.py::test_complete_studio_setup -v
-
-pytest tests/test_application_search.py::test_application_search -v
-pytest tests/test_inbox_search.py::test_inbox_search -v
-pytest tests/test_workflow_search.py::test_workflow_search -v
-pytest tests/test_actions_roleactions_search.py -v
-pytest tests/test_process_instance_search.py -v
-
-pytest tests/test_e2e_flow.py::test_e2e_complete_flow -v -s
-pytest tests/test_application.py -v --html=reports/app_report.html
-pytest tests/test_studio_services.py -v --html=reports/studio_report.html
-google-chrome reports/app_report.html
-google-chrome reports/studio_report.html
-
-
-pytest tests/test_studio_services.py::test_mdms_service_create \
-       tests/test_studio_services.py::test_public_service_init \
-       tests/test_application.py::test_application_create \
-       tests/test_application.py::test_application_assign \
-       tests/test_application.py::test_application_resolve \
-       -v --html=reports/flow_report.html --self-contained-html
+Internal use only - eGovernments Foundation / DIGIT
