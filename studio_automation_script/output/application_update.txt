@@ -1,0 +1,6 @@
+--- Application Update ---
+Status Code: 200
+Application Number: ModuleIRYKAB-Service15G3NK-app-2025-12-08-008521
+Workflow Action: ASSIGN
+New Workflow Status: PENDING_AT_LME
+Result: Success

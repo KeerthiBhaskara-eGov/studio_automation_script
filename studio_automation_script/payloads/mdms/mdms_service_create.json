@@ -1,0 +1,823 @@
+{
+  "Mdms": {
+    "tenantId": "{{tenantId}}",
+    "schemaCode": "Studio.ServiceConfiguration",
+    "data": {
+      "pdf": [
+        {
+          "key": "tl-application",
+          "type": "application",
+          "states": [
+            "applied",
+            "approved"
+          ]
+        },
+        {
+          "key": "tl-bill",
+          "type": "bill",
+          "states": [
+            "approved"
+          ]
+        },
+        {
+          "key": "tl-receipt",
+          "type": "receipt",
+          "states": [
+            "approved"
+          ]
+        }
+      ],
+      "bill": {
+        "taxHead": [
+          {
+            "code": "applicationFee",
+            "name": "applicationFee",
+            "order": "2",
+            "isDebit": false,
+            "service": "TESTBSONE",
+            "category": "TAX",
+            "isRequired": false,
+            "isActualDemand": true
+          }
+        ],
+        "taxPeriod": [
+          {
+            "code": "TEST2018",
+            "toDate": 1554076799000,
+            "service": "TESTBSONE",
+            "fromDate": 1522540800000,
+            "periodCycle": "ANNUAL",
+            "financialYear": "2018-19"
+          }
+        ],
+        "BusinessService": {
+          "code": "TESTBSONE",
+          "businessService": "TESTBSONE",
+          "demandUpdateTime": 86400000,
+          "isAdvanceAllowed": false,
+          "minAmountPayable": 100,
+          "partPaymentAllowed": true,
+          "isVoucherCreationEnabled": true,
+          "collectionModesNotAllowed": [
+            "DD",
+            "OFFLINE_NEFT",
+            "OFFLINE_RTGS",
+            "POSTAL_ORDER"
+          ]
+        }
+      },
+      "idgen": [
+        {
+          "type": "application",
+          "format": "{{module}}-{{service}}-app-[cy:yyyy-MM-dd]-[SEQ_PUBLIC_APPLICATION]",
+          "idname": "{{module}}-{{service}}.application.{{service}}.applicationapp.id"
+        },
+        {
+          "type": "service",
+          "format": "{{module}}-{{service}}-svc-[cy:yyyy-MM-dd]-[SEQ_PUBLIC_APPLICATION]",
+          "idname": "{{module}}-{{service}}.application.{{service}}.applicationservice.id"
+        }
+      ],
+      "inbox": {
+        "index": "public-service-index",
+        "module": "public-service",
+        "sortBy": {
+          "path": "Data.auditDetails.createdTime",
+          "defaultOrder": "DESC"
+        },
+        "sourceFilterPathList": [
+          "Data.businessService",
+          "Data.applicationNumber",
+          "Data.currentProcessInstance",
+          "Data.auditDetails",
+          "Data.additionalDetails",
+          "Data.module",
+          "Data.locality",
+          "Data.status"
+        ],
+        "allowedSearchCriteria": [
+          {
+            "name": "tenantId",
+            "path": "Data.tenantId.keyword",
+            "operator": "EQUAL",
+            "isMandatory": true
+          },
+          {
+            "name": "status",
+            "path": "Data.workflowStatus",
+            "isMandatory": false
+          },
+          {
+            "name": "applicationNumber",
+            "path": "Data.applicationNumber.keyword",
+            "isMandatory": false
+          },
+          {
+            "name": "module",
+            "path": "Data.module.keyword",
+            "isMandatory": false
+          },
+          {
+            "name": "businessService",
+            "path": "Data.businessService.keyword",
+            "isMandatory": false
+          },
+          {
+            "name": "locality",
+            "path": "Data.address.locality.keyword",
+            "isMandatory": false
+          },
+          {
+            "name": "assignee",
+            "path": "Data.currentProcessInstance.assignes.uuid.keyword",
+            "isMandatory": false
+          }
+        ]
+      },
+      "rules": {
+        "registry": {
+          "type": "api",
+          "service": "{{service}}"
+        },
+        "calculator": {
+          "type": "custom",
+          "service": "{{service}}",
+          "customFunction": ""
+        },
+        "references": [
+          {
+            "type": "initiate",
+            "service": "{{service}}"
+          }
+        ],
+        "validation": {
+          "type": "schema",
+          "service": "{{service}}",
+          "schemaCode": "{{service}}.apply",
+          "customFunction": ""
+        }
+      },
+      "access": {
+        "roles": {
+          "editor": [
+            "STUDIO_CITIZEN",
+            "{{module}}_{{service}}_COMPLAINT_EVALUATOR"
+          ],
+          "viewer": [
+            "STUDIO_CITIZEN",
+            "{{module}}_{{service}}_COMPLAINT_EVALUATOR"
+          ],
+          "creator": [
+            "STUDIO_CITIZEN"
+          ]
+        },
+        "actions": [
+          {
+            "url": "{{service}}-services/v1/create"
+          }
+        ]
+      },
+      "fields": [
+        {
+          "name": "Section2",
+          "type": "object",
+          "label": "Section 2",
+          "properties": [
+            {
+              "name": "ComplaintType",
+              "type": "string",
+              "label": "Complaint Type",
+              "format": "radioordropdown",
+              "schema": "masterDemo.ComplaintType",
+              "disable": false,
+              "tooltip": "",
+              "helpText": "",
+              "required": false,
+              "reference": "mdms",
+              "orderNumber": 1,
+              "defaultValue": "",
+              "errorMessage": ""
+            },
+            {
+              "name": "ComplaintSubType",
+              "type": "string",
+              "label": "Complaint Sub Type",
+              "format": "MDMSDependentDropdown",
+              "schema": "masterDemo.ComplaintSubType",
+              "disable": false,
+              "tooltip": "",
+              "helpText": "",
+              "required": false,
+              "dependsOn": "ComplaintType.code",
+              "parentKey": "parent",
+              "reference": "mdms",
+              "orderNumber": 2,
+              "defaultValue": "",
+              "errorMessage": "",
+              "visibilityExpression": "values?.ComplaintType?.code !== 'OTHERS'"
+            }
+          ]
+        },
+        {
+          "name": "AddressDetails",
+          "type": "address",
+          "label": "Address Details",
+          "properties": [
+            {
+              "name": "pincode",
+              "path": "address.pincode",
+              "type": "string",
+              "label": "Pincode",
+              "format": "text",
+              "disable": false,
+              "tooltip": "",
+              "helpText": "",
+              "required": false,
+              "validation": {
+                "regex": "^[1-9][0-9]{5}$",
+                "message": "Please enter a valid 6-digit pincode"
+              },
+              "orderNumber": 1,
+              "defaultValue": "",
+              "errorMessage": "Please enter a valid 6-digit pincode"
+            },
+            {
+              "name": "streetName",
+              "path": "address.streetName",
+              "type": "string",
+              "label": "Street Name",
+              "format": "text",
+              "disable": false,
+              "tooltip": "",
+              "helpText": "",
+              "required": false,
+              "orderNumber": 2,
+              "defaultValue": "",
+              "errorMessage": ""
+            },
+            {
+              "name": "boundaryHierarchy",
+              "path": "address.boundaryHierarchy",
+              "type": "string",
+              "label": "Area Selection",
+              "format": "hierarchyDropdown",
+              "disable": false,
+              "tooltip": "",
+              "helpText": "",
+              "required": false,
+              "orderNumber": 3,
+              "defaultValue": "",
+              "errorMessage": "",
+              "hierarchyType": "ADMIN",
+              "lowestHierarchy": "VILLAGE",
+              "highestHierarchy": "COUNTRY"
+            },
+            {
+              "name": "mapCoordinates",
+              "path": "address.mapCoordinates",
+              "type": "string",
+              "label": "Select Location on Map",
+              "format": "geolocation",
+              "disable": false,
+              "tooltip": "",
+              "helpText": "",
+              "required": false,
+              "orderNumber": 4,
+              "defaultValue": "",
+              "errorMessage": ""
+            }
+          ]
+        }
+      ],
+      "module": "{{module}}",
+      "enabled": [
+        "CITIZEN",
+        "EMPLOYEE"
+      ],
+      "payment": {
+        "gateway": "TODO"
+      },
+      "service": "{{service}}",
+      "boundary": {
+        "lowestLevel": "VILLAGE",
+        "highestLevel": "COUNTRY",
+        "hierarchyType": "ADMIN"
+      },
+      "workflow": {
+        "ACTIVE": [],
+        "states": [
+          {
+            "sla": null,
+            "state": null,
+            "actions": [
+              {
+                "roles": [
+                  "STUDIO_CITIZEN",
+                  "STUDIO_ADMIN"
+                ],
+                "action": "APPLIED",
+                "nextState": "PENDING_FOR_ASSIGNMENT"
+              }
+            ],
+            "isStartState": true,
+            "isStateUpdatable": true,
+            "isTerminateState": false,
+            "applicationStatus": null,
+            "docUploadRequired": false
+          },
+          {
+            "sla": 86400000,
+            "state": "PENDING_FOR_ASSIGNMENT",
+            "actions": [
+              {
+                "roles": [
+                  "{{module}}_{{service}}_COMPLAINT_EVALUATOR",
+                  "STUDIO_ADMIN"
+                ],
+                "action": "REJECT",
+                "nextState": "REJECTED"
+              },
+              {
+                "roles": [
+                  "{{module}}_{{service}}_COMPLAINT_EVALUATOR",
+                  "STUDIO_ADMIN"
+                ],
+                "action": "ASSIGN",
+                "nextState": "PENDING_AT_LME"
+              }
+            ],
+            "isStartState": false,
+            "isStateUpdatable": true,
+            "isTerminateState": false,
+            "applicationStatus": null,
+            "docUploadRequired": false
+          },
+          {
+            "sla": null,
+            "state": "REJECTED",
+            "actions": [],
+            "isStartState": false,
+            "isStateUpdatable": true,
+            "isTerminateState": true,
+            "applicationStatus": null,
+            "docUploadRequired": false
+          },
+          {
+            "sla": null,
+            "state": "RESOLVED",
+            "actions": [],
+            "isStartState": false,
+            "isStateUpdatable": true,
+            "isTerminateState": true,
+            "applicationStatus": null,
+            "docUploadRequired": false
+          },
+          {
+            "sla": 86400000,
+            "state": "PENDING_AT_LME",
+            "actions": [
+              {
+                "roles": [
+                  "{{module}}_{{service}}_COMPLAINT_EVALUATOR",
+                  "STUDIO_ADMIN"
+                ],
+                "action": "RESOLVE",
+                "nextState": "RESOLVED"
+              },
+              {
+                "roles": [
+                  "{{module}}_{{service}}_COMPLAINT_EVALUATOR",
+                  "STUDIO_ADMIN"
+                ],
+                "action": "REASSIGN",
+                "nextState": "PENDING_FOR_ASSIGNMENT"
+              }
+            ],
+            "isStartState": false,
+            "isStateUpdatable": true,
+            "isTerminateState": false,
+            "applicationStatus": null,
+            "docUploadRequired": false
+          }
+        ],
+        "INACTIVE": [],
+        "business": "public-services",
+        "businessService": "{{module}}.{{service}}",
+        "generateDemandAt": [
+          "ASSIGN"
+        ],
+        "businessServiceSla": 172800000,
+        "nextActionAfterPayment": "RESOLVE",
+        "autoTransitionEnabledStates": []
+      },
+      "apiconfig": [
+        {
+          "host": "https://staging.digit.org",
+          "type": "register",
+          "method": "post",
+          "service": "{{service}}",
+          "endpoint": "/{{service}}-services/v1/create"
+        },
+        {
+          "host": "https://staging.digit.org",
+          "type": "search",
+          "method": "post",
+          "service": "{{service}}",
+          "endpoint": "/{{service}}-services/v1/search"
+        }
+      ],
+      "applicant": {
+        "types": [
+          "individual",
+          "organisation"
+        ],
+        "config": {
+          "systemUser": true,
+          "systemRoles": [
+            "STUDIO_CITIZEN"
+          ],
+          "systemUserType": "CITIZEN"
+        },
+        "maximum": 3,
+        "minimum": 1,
+        "searchby": [],
+        "individual": {
+          "properties": [
+            {
+              "name": "name",
+              "path": "individual.name",
+              "type": "string",
+              "label": "Name",
+              "format": "text",
+              "required": true,
+              "orderNumber": 1
+            },
+            {
+              "name": "mobilenumber",
+              "path": "individual.mobilenumber",
+              "type": "mobileNumber",
+              "label": "Mobile Number",
+              "format": "mobileNumber",
+              "prefix": "+91",
+              "required": true,
+              "maxLength": 10,
+              "minLength": 0,
+              "orderNumber": 2
+            },
+            {
+              "name": "email",
+              "path": "individual.email",
+              "type": "string",
+              "label": "Email",
+              "format": "text",
+              "required": false,
+              "validation": {
+                "regex": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+                "message": "Please enter a valid email address"
+              },
+              "orderNumber": 3
+            },
+            {
+              "name": "gender",
+              "path": "individual.gender",
+              "type": "string",
+              "label": "Gender",
+              "format": "radioordropdown",
+              "schema": "common-masters.GenderType",
+              "required": false,
+              "reference": "mdms",
+              "orderNumber": 4
+            }
+          ]
+        },
+        "organisation": {
+          "properties": []
+        },
+        "allowLoggedInUser": false
+      },
+      "checklist": [
+        {
+          "name": "complaint details",
+          "state": "PENDING_FOR_ASSIGNMENT",
+          "checklistData": {
+            "data": [
+              {
+                "id": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c",
+                "key": 1,
+                "type": {
+                  "code": "SingleValueList"
+                },
+                "level": 1,
+                "title": "Is user verified",
+                "value": null,
+                "options": [
+                  {
+                    "id": "0cff9846-03a2-4453-bf0e-200cdda5f390",
+                    "key": 1,
+                    "label": "yes",
+                    "subQuestions": [],
+                    "optionComment": false,
+                    "optionDependency": false,
+                    "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                  },
+                  {
+                    "id": "option_2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c_2",
+                    "key": 2,
+                    "label": "no",
+                    "subQuestions": [],
+                    "optionDependency": false,
+                    "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                  }
+                ],
+                "isActive": true,
+                "parentId": null,
+                "isRequired": false,
+                "subQuestions": []
+              },
+              {
+                "id": "question_L1_3",
+                "key": 2,
+                "type": {
+                  "code": "Text",
+                  "i18nKey": "STUDIO_TEXT"
+                },
+                "level": 1,
+                "regex": null,
+                "title": "Additional details to improve",
+                "value": null,
+                "options": [],
+                "isActive": true,
+                "parentId": null,
+                "isRequired": false,
+                "subQuestions": []
+              }
+            ],
+            "name": "complaint details",
+            "isActive": true,
+            "description": ""
+          }
+        },
+        {
+          "name": "complaint details",
+          "state": "REJECTED",
+          "checklistData": {
+            "data": [
+              {
+                "id": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c",
+                "key": 1,
+                "type": {
+                  "code": "SingleValueList"
+                },
+                "level": 1,
+                "title": "Is user verified",
+                "value": null,
+                "options": [
+                  {
+                    "id": "0cff9846-03a2-4453-bf0e-200cdda5f390",
+                    "key": 1,
+                    "label": "yes",
+                    "subQuestions": [],
+                    "optionComment": false,
+                    "optionDependency": false,
+                    "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                  },
+                  {
+                    "id": "option_2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c_2",
+                    "key": 2,
+                    "label": "no",
+                    "subQuestions": [],
+                    "optionDependency": false,
+                    "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                  }
+                ],
+                "isActive": true,
+                "parentId": null,
+                "isRequired": false,
+                "subQuestions": []
+              },
+              {
+                "id": "question_L1_3",
+                "key": 2,
+                "type": {
+                  "code": "Text",
+                  "i18nKey": "STUDIO_TEXT"
+                },
+                "level": 1,
+                "regex": null,
+                "title": "Additional details to improve",
+                "value": null,
+                "options": [],
+                "isActive": true,
+                "parentId": null,
+                "isRequired": false,
+                "subQuestions": []
+              }
+            ],
+            "name": "complaint details",
+            "isActive": true,
+            "description": ""
+          }
+        },
+        {
+          "name": "complaint details",
+          "state": "PENDING_AT_LME",
+          "checklistData": {
+            "data": [
+              {
+                "id": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c",
+                "key": 1,
+                "type": {
+                  "code": "SingleValueList"
+                },
+                "level": 1,
+                "title": "Is user verified",
+                "value": null,
+                "options": [
+                  {
+                    "id": "0cff9846-03a2-4453-bf0e-200cdda5f390",
+                    "key": 1,
+                    "label": "yes",
+                    "subQuestions": [],
+                    "optionComment": false,
+                    "optionDependency": false,
+                    "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                  },
+                  {
+                    "id": "option_2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c_2",
+                    "key": 2,
+                    "label": "no",
+                    "subQuestions": [],
+                    "optionDependency": false,
+                    "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                  }
+                ],
+                "isActive": true,
+                "parentId": null,
+                "isRequired": false,
+                "subQuestions": []
+              },
+              {
+                "id": "question_L1_3",
+                "key": 2,
+                "type": {
+                  "code": "Text",
+                  "i18nKey": "STUDIO_TEXT"
+                },
+                "level": 1,
+                "regex": null,
+                "title": "Additional details to improve",
+                "value": null,
+                "options": [],
+                "isActive": true,
+                "parentId": null,
+                "isRequired": false,
+                "subQuestions": []
+              }
+            ],
+            "name": "complaint details",
+            "isActive": true,
+            "description": ""
+          }
+        }
+      ],
+      "documents": [
+        {
+          "module": "{{module}}{{service}}",
+          "actions": [
+            {
+              "action": "APPLIED",
+              "assignee": {
+                "show": false,
+                "isMandatory": false
+              },
+              "comments": {
+                "show": false,
+                "isMandatory": false
+              },
+              "documents": [
+                {
+                  "code": "complaintproof",
+                  "name": "complaint proof",
+                  "active": true,
+                  "hintText": "",
+                  "isMandatory": false,
+                  "maxSizeInMB": 5,
+                  "documentType": "Document",
+                  "showHintBelow": false,
+                  "showTextInput": false,
+                  "templatePDFKey": null,
+                  "maxFilesAllowed": 1,
+                  "allowedFileTypes": [
+                    "pdf",
+                    "doc",
+                    "docx",
+                    "jpeg",
+                    "jpg",
+                    "png"
+                  ],
+                  "templateDownloadURL": null
+                }
+              ]
+            },
+            {
+              "action": "REJECT",
+              "assignee": {
+                "show": false,
+                "isMandatory": false
+              },
+              "comments": {
+                "show": true,
+                "isMandatory": false
+              },
+              "documents": []
+            },
+            {
+              "action": "ASSIGN",
+              "assignee": {
+                "show": true,
+                "isMandatory": false
+              },
+              "comments": {
+                "show": true,
+                "isMandatory": false
+              },
+              "documents": []
+            },
+            {
+              "action": "RESOLVE",
+              "assignee": {
+                "show": false,
+                "isMandatory": false
+              },
+              "comments": {
+                "show": false,
+                "isMandatory": false
+              },
+              "documents": []
+            },
+            {
+              "action": "REASSIGN",
+              "assignee": {
+                "show": true,
+                "isMandatory": false
+              },
+              "comments": {
+                "show": true,
+                "isMandatory": false
+              },
+              "documents": []
+            }
+          ],
+          "bannerLabel": "OBPS_BANNER",
+          "maxSizeInMB": 5,
+          "allowedFileTypes": [
+            "pdf",
+            "doc",
+            "docx",
+            "xlsx",
+            "xls",
+            "jpeg",
+            "jpg",
+            "png"
+          ]
+        }
+      ],
+      "calculator": {
+        "type": "custom",
+        "billingSlabs": [
+          {
+            "key": "applicationFee",
+            "value": 2000
+          }
+        ]
+      },
+      "localization": {
+        "modules": [
+          "digit-studio"
+        ]
+      },
+      "notification": {
+        "sms": [
+          {
+            "code": "complaint reject",
+            "states": [
+              "REJECTED"
+            ],
+            "template": "Hey {PublicService.applicants[0].Name} \napplication is rejected {PublicService.serviceDetails.Section2.complainttype} "
+          }
+        ],
+        "push": [],
+        "email": [
+          {
+            "code": "complaint resolved",
+            "states": [
+              "RESOLVED"
+            ],
+            "subject": "complaint details",
+            "template": "complaint resolved- {PublicService.applicants[0].Name}  {PublicService.serviceDetails.Section2.complainttype} "
+          }
+        ]
+      }
+    }
+  }
+}

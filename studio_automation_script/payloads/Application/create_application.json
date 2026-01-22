@@ -1,0 +1,78 @@
+{
+    "Application": {
+        "tenantId": "{{tenantId}}",
+        "module": "{{module}}",
+        "businessService": "{{service}}",
+        "serviceCode": "{{serviceCode}}",
+        "status": "ACTIVE",
+        "channel": "counter",
+        "reference": null,
+        "workflowStatus": "applied",
+        "serviceDetails": {
+            "Section2": {
+                "ComplaintType": "STREETLIGHTS",
+                "ComplaintSubType": "STREETLIGHT_MALFUNCTION"
+            }
+        },
+        "applicants": [
+            {
+                "type": "individual",
+                "active": true,
+                "prefix": "91",
+                "additionalFields": {
+                    "schema": null,
+                    "version": null,
+                    "fields": [
+                        {
+                            "key": "email",
+                            "value": "qwerty@gmail.com"
+                        },
+                        {
+                            "key": "gender",
+                            "value": "MALE"
+                        }
+                    ]
+                },
+                "name": "qwerty",
+                "mobileNumber": 9876567876,
+                "emailId": "qwerty@gmail.com"
+            }
+        ],
+        "address": {
+            "tenantId": "{{tenantId}}",
+            "latitude": 21.88189,
+            "longitude": 79.40918,
+            "addressNumber": "1",
+            "addressLine1": "ST 123",
+            "addressLine2": "",
+            "landmark": "",
+            "city": "",
+            "pincode": "876543",
+            "hierarchyType": "ADMIN",
+            "boundarylevel": "VILLAGE",
+            "boundarycode": "KANO_NI_01_44_10_11_01_KOFAR_FADA_KAN_08",
+            "additionalFields": {
+                "schema": null,
+                "version": null,
+                "fields": []
+            }
+        },
+        "documents": [
+            {
+                "documentType": "complaint proof",
+                "fileStoreId": "cc419146-b68e-495c-b5e9-de18828c55a5",
+                "documentUid": null,
+                "additionalDetails": {}
+            }
+        ],
+        "additionalDetails": {
+            "ref1": "val1"
+        },
+        "Workflow": {
+            "action": "APPLIED",
+            "comment": "",
+            "assignees": [],
+            "businessService": "{{module}}.{{service}}"
+        }
+    }
+}

@@ -1,0 +1,11 @@
+{
+  "service": {
+    "tenantId": "{{tenantId}}",
+    "businessService": "{{service}}",
+    "module": "{{module}}",
+    "status": "ACTIVE",
+    "additionalDetails": {
+      "note": "{{note}}"
+    }
+  }
+}

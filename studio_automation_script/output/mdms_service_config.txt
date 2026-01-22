@@ -1,0 +1,9 @@
+--- MDMS Service Configuration ---
+Status Code: 202
+Tenant: st
+Module: ModuleDS9RRB
+Service: ServiceQ99VAB
+Schema Code: Studio.ServiceConfiguration
+ID: d672e5be-0a83-4bf8-80e3-1fa88a7442f9
+Unique Identifier: ModuleDS9RRB.ServiceQ99VAB
+Status: Success

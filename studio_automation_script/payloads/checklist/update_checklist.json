@@ -1,0 +1,31 @@
+{
+    "Service": {
+        "id": "{{serviceId}}",
+        "clientId": "{{userUuid}}",
+        "serviceDefId": "{{serviceDefId}}",
+        "accountId": "{{accountId}}",
+        "tenantId": "{{tenantId}}",
+        "attributes": [
+            {
+                "id": "{{attributeId1}}",
+                "attributeCode": "Is user verified",
+                "tenantId": "{{tenantId}}",
+                "dataType": "SingleValueList",
+                "value": "no"
+            },
+            {
+                "id": "{{attributeId2}}",
+                "attributeCode": "Additional details to improve",
+                "tenantId": "{{tenantId}}",
+                "dataType": "Text",
+                "value": "automation test - updated"
+            }
+        ],
+        "additionalFields": [
+            {
+                "action": "SUBMIT"
+            }
+        ]
+    },
+    "apiOperation": "UPDATE"
+}

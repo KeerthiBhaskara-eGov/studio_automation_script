@@ -1,0 +1,28 @@
+{
+    "Service": {
+        "clientId": "{{userUuid}}",
+        "serviceDefId": "{{serviceDefId}}", 
+        "accountId": "{{accountId}}",
+        "tenantId": "{{tenantId}}",
+        "attributes": [
+            {
+                "attributeCode": "Is user verified",
+                "tenantId": "{{tenantId}}",
+                "dataType": "SingleValueList",
+                "value": "yes"
+            },
+            {
+                "attributeCode": "Additional details to improve",
+                "tenantId": "{{tenantId}}",
+                "dataType": "Text",
+                "value": "automation test value"
+            }
+        ],
+        "additionalFields": [
+            {
+                "action": "SAVE_AS_DRAFT"
+            }
+        ]
+    },
+    "apiOperation": "CREATE"
+}

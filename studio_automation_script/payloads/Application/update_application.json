@@ -1,0 +1,92 @@
+{
+    "Application": {
+        "id": "f3b0ce7b-7760-463d-a0d7-f3508f0fc560",
+        "tenantId": "{{tenantId}}",
+        "module": "{{module}}",
+        "businessService": "{{service}}",
+        "status": "INACTIVE",
+        "channel": "counter",
+        "version": 1,
+        "applicationNumber": "{{applicationNumber}}",
+        "reference": null,
+        "workflowStatus": "PENDING_FOR_ASSIGNMENT",
+        "serviceCode": "{{serviceCode}}",
+        "serviceDetails": {
+            "Section2": {
+                "ComplaintSubType": "STREETLIGHT_MALFUNCTION",
+                "ComplaintType": "STREETLIGHTS"
+            }
+        },
+        "applicants": [
+            {
+                "id": "{{applicantId}}",
+                "type": "individual",
+                "userId": "{{userId}}",
+                "name": "qwerty",
+                "mobileNumber": 9876567876,
+                "emailId": "qwerty@gmail.com",
+                "prefix": "",
+                "active": true,
+                "gender": "FEMALE",
+                "additionalFields": {
+                    "fields": [
+                        {
+                            "key": "email",
+                            "value": "qwerty@gmail.com"
+                        },
+                        {
+                            "key": "gender",
+                            "value": "MALE"
+                        }
+                    ]
+                }
+            }
+        ],
+        "additionalDetails": {
+            "ref1": "val1"
+        },
+        "address": {
+            "id": "{{addressId}}",
+            "tenantId": "{{tenantId}}",
+            "latitude": 21.88189,
+            "longitude": 79.40918,
+            "addressNumber": "1",
+            "addressLine1": "ST 123",
+            "addressLine2": "",
+            "landmark": "",
+            "city": "",
+            "pincode": "876543",
+            "properties": {},
+            "hierarchyType": "ADMIN",
+            "boundaryType": "VILLAGE",
+            "boundarylevel": "VILLAGE",
+            "boundaryCode": "KANO_NI_01_44_10_11_01_KOFAR_FADA_KAN_08",
+            "boundarycode": "KANO_NI_01_44_10_11_01_KOFAR_FADA_KAN_08",
+            "applicationNumber": "{{module}}-{{service}}-app-2026-01-06-008893"
+        },
+        "workflow": {
+            "action": "{{workflowAction}}",
+            "businessService": "{{module}}.{{service}}"
+        },
+        "auditDetails": {
+            "createdBy": "{{createdBy}}",
+            "lastModifiedBy": "{{lastModifiedBy}}",
+            "createdTime": 1767690647000,
+            "lastModifiedTime": 1767690647000
+        },
+        "processInstance": null,
+        "documents": [
+            {
+                "id": "1419ccbe-d0c1-46cd-bec8-ca7d195e8dfb",
+                "documentType": "complaint proof",
+                "fileStoreId": "cc419146-b68e-495c-b5e9-de18828c55a5",
+                "auditDetails": {
+                    "createdBy": "f7ff59df-f78f-4b98-adc4-6b0561594a62",
+                    "lastModifiedBy": "f7ff59df-f78f-4b98-adc4-6b0561594a62",
+                    "createdTime": 1767690647000,
+                    "lastModifiedTime": 1767690647000
+                }
+            }
+        ]
+    }
+}

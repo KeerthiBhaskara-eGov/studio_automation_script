@@ -1,0 +1,1558 @@
+{
+    "Mdms": {
+        "tenantId": "{{tenantId}}",
+        "schemaCode": "Studio.ServiceConfigurationDrafts",
+        "data": {
+            "pdf": [
+                {
+                    "key": "tl-application",
+                    "type": "application",
+                    "states": [
+                        "applied",
+                        "approved"
+                    ]
+                },
+                {
+                    "key": "tl-bill",
+                    "type": "bill",
+                    "states": [
+                        "approved"
+                    ]
+                },
+                {
+                    "key": "tl-receipt",
+                    "type": "receipt",
+                    "states": [
+                        "approved"
+                    ]
+                }
+            ],
+            "bill": {
+                "taxHead": [
+                    {
+                        "code": "applicationFee",
+                        "name": "applicationFee",
+                        "order": "2",
+                        "isDebit": false,
+                        "service": "TESTBSONE",
+                        "category": "TAX",
+                        "isRequired": false,
+                        "isActualDemand": true
+                    }
+                ],
+                "taxPeriod": [
+                    {
+                        "code": "TEST2018",
+                        "toDate": 1554076799000,
+                        "service": "TESTBSONE",
+                        "fromDate": 1522540800000,
+                        "periodCycle": "ANNUAL",
+                        "financialYear": "2018-19"
+                    }
+                ],
+                "BusinessService": {
+                    "code": "TESTBSONE",
+                    "businessService": "TESTBSONE",
+                    "demandUpdateTime": 86400000,
+                    "isAdvanceAllowed": false,
+                    "minAmountPayable": 100,
+                    "partPaymentAllowed": true,
+                    "isVoucherCreationEnabled": true,
+                    "collectionModesNotAllowed": [
+                        "DD",
+                        "OFFLINE_NEFT",
+                        "OFFLINE_RTGS",
+                        "POSTAL_ORDER"
+                    ]
+                }
+            },
+            "idgen": [
+                {
+                    "type": "application",
+                    "format": "{{module}}-{{service}}-app-[cy:yyyy-MM-dd]-[SEQ_PUBLIC_APPLICATION]",
+                    "idname": "{{module}}-{{service}}.application.{{service}}.applicationapp.id"
+                },
+                {
+                    "type": "service",
+                    "format": "{{module}}-{{service}}-svc-[cy:yyyy-MM-dd]-[SEQ_PUBLIC_APPLICATION]",
+                    "idname": "{{module}}-{{service}}.application.{{service}}.applicationservice.id"
+                }
+            ],
+            "inbox": {
+                "index": "public-service-index",
+                "module": "public-service",
+                "sortBy": {
+                    "path": "Data.auditDetails.createdTime",
+                    "defaultOrder": "DESC"
+                },
+                "sourceFilterPathList": [
+                    "Data.businessService",
+                    "Data.applicationNumber",
+                    "Data.currentProcessInstance",
+                    "Data.auditDetails",
+                    "Data.additionalDetails",
+                    "Data.module",
+                    "Data.locality",
+                    "Data.status"
+                ],
+                "allowedSearchCriteria": [
+                    {
+                        "name": "tenantId",
+                        "path": "Data.tenantId.keyword",
+                        "operator": "EQUAL",
+                        "isMandatory": true
+                    },
+                    {
+                        "name": "status",
+                        "path": "Data.workflowStatus",
+                        "isMandatory": false
+                    },
+                    {
+                        "name": "applicationNumber",
+                        "path": "Data.applicationNumber.keyword",
+                        "isMandatory": false
+                    },
+                    {
+                        "name": "module",
+                        "path": "Data.module.keyword",
+                        "isMandatory": false
+                    },
+                    {
+                        "name": "businessService",
+                        "path": "Data.businessService.keyword",
+                        "isMandatory": false
+                    },
+                    {
+                        "name": "locality",
+                        "path": "Data.address.locality.keyword",
+                        "isMandatory": false
+                    },
+                    {
+                        "name": "assignee",
+                        "path": "Data.currentProcessInstance.assignes.uuid.keyword",
+                        "isMandatory": false
+                    }
+                ]
+            },
+            "rules": {
+                "registry": {
+                    "type": "api",
+                    "service": "{{service}}"
+                },
+                "calculator": {
+                    "type": "custom",
+                    "service": "{{service}}",
+                    "customFunction": ""
+                },
+                "references": [
+                    {
+                        "type": "initiate",
+                        "service": "{{service}}"
+                    }
+                ],
+                "validation": {
+                    "type": "schema",
+                    "service": "{{service}}",
+                    "schemaCode": "{{service}}.apply",
+                    "customFunction": ""
+                }
+            },
+            "access": {
+                "roles": {
+                    "editor": [
+                        "STUDIO_CITIZEN",
+                        "{{module}}_{{service}}_COMPLAINT_EVALUATOR"
+                    ],
+                    "viewer": [
+                        "STUDIO_CITIZEN",
+                        "{{module}}_{{service}}_COMPLAINT_EVALUATOR"
+                    ],
+                    "creator": [
+                        "STUDIO_CITIZEN"
+                    ]
+                },
+                "actions": [
+                    {
+                        "url": "{{service}}-services/v1/create"
+                    }
+                ]
+            },
+            "fields": [
+                {
+                    "name": "Section2",
+                    "type": "object",
+                    "label": "Section 2",
+                    "properties": [
+                        {
+                            "name": "complainttype",
+                            "type": "enum",
+                            "label": "complaint type",
+                            "format": "radioordropdown",
+                            "values": [
+                                "Street Lights",
+                                "Road block"
+                            ],
+                            "disable": false,
+                            "tooltip": "",
+                            "helpText": "",
+                            "required": false,
+                            "orderNumber": 1,
+                            "defaultValue": "",
+                            "errorMessage": ""
+                        },
+                        {
+                            "name": "complaintsubtype",
+                            "type": "enum",
+                            "label": "complaint subtype",
+                            "format": "radioordropdown",
+                            "values": [
+                                "Need to install light",
+                                "Road water block"
+                            ],
+                            "disable": false,
+                            "tooltip": "",
+                            "helpText": "",
+                            "required": false,
+                            "orderNumber": 2,
+                            "defaultValue": "",
+                            "errorMessage": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "AddressDetails",
+                    "type": "address",
+                    "label": "Address Details",
+                    "properties": [
+                        {
+                            "name": "pincode",
+                            "path": "address.pincode",
+                            "type": "string",
+                            "label": "Pincode",
+                            "format": "text",
+                            "disable": false,
+                            "tooltip": "",
+                            "helpText": "",
+                            "required": false,
+                            "validation": {
+                                "regex": "^[1-9][0-9]{5}$",
+                                "message": "Please enter a valid 6-digit pincode"
+                            },
+                            "orderNumber": 1,
+                            "defaultValue": "",
+                            "errorMessage": "Please enter a valid 6-digit pincode"
+                        },
+                        {
+                            "name": "streetName",
+                            "path": "address.streetName",
+                            "type": "string",
+                            "label": "Street Name",
+                            "format": "text",
+                            "disable": false,
+                            "tooltip": "",
+                            "helpText": "",
+                            "required": false,
+                            "orderNumber": 2,
+                            "defaultValue": "",
+                            "errorMessage": ""
+                        },
+                        {
+                            "name": "boundaryHierarchy",
+                            "path": "address.boundaryHierarchy",
+                            "type": "string",
+                            "label": "Area Selection",
+                            "format": "hierarchyDropdown",
+                            "disable": false,
+                            "tooltip": "",
+                            "helpText": "",
+                            "required": false,
+                            "orderNumber": 3,
+                            "defaultValue": "",
+                            "errorMessage": "",
+                            "hierarchyType": "ADMIN",
+                            "lowestHierarchy": "VILLAGE",
+                            "highestHierarchy": "COUNTRY"
+                        },
+                        {
+                            "name": "mapCoordinates",
+                            "path": "address.mapCoordinates",
+                            "type": "string",
+                            "label": "Select Location on Map",
+                            "format": "geolocation",
+                            "disable": false,
+                            "tooltip": "",
+                            "helpText": "",
+                            "required": false,
+                            "orderNumber": 4,
+                            "defaultValue": "",
+                            "errorMessage": ""
+                        }
+                    ]
+                }
+            ],
+            "module": "{{module}}",
+            "enabled": [
+                "CITIZEN",
+                "EMPLOYEE"
+            ],
+            "payment": {
+                "gateway": "TODO"
+            },
+            "service": "{{service}}",
+            "uiforms": [
+                {
+                    "formName": "complaint",
+                    "isActive": true,
+                    "formConfig": {
+                        "screens": [
+                            {
+                                "name": "beneficiaryLocation",
+                                "type": "object",
+                                "cards": [
+                                    {
+                                        "fields": [
+                                            {
+                                                "type": "text",
+                                                "label": "Name",
+                                                "order": 1,
+                                                "value": "",
+                                                "active": true,
+                                                "hidden": false,
+                                                "appType": "text",
+                                                "tooltip": "",
+                                                "helpText": "",
+                                                "jsonPath": "ApplicantName",
+                                                "metaData": {},
+                                                "readOnly": false,
+                                                "required": true,
+                                                "deleteFlag": false,
+                                                "innerLabel": "",
+                                                "isMandatory": true,
+                                                "defaultValue": "",
+                                                "errorMessage": ""
+                                            },
+                                            {
+                                                "type": "mobileNumber",
+                                                "label": "Mobile Number",
+                                                "order": 2,
+                                                "value": "",
+                                                "active": true,
+                                                "hidden": false,
+                                                "appType": "mobileNumber",
+                                                "tooltip": "",
+                                                "helpText": "",
+                                                "hideSpan": true,
+                                                "jsonPath": "ApplicantMobile",
+                                                "metaData": {
+                                                    "hideSpan": true
+                                                },
+                                                "readOnly": false,
+                                                "required": true,
+                                                "deleteFlag": false,
+                                                "innerLabel": "",
+                                                "populators": {
+                                                    "hideSpan": true
+                                                },
+                                                "isMandatory": true,
+                                                "defaultValue": "",
+                                                "errorMessage": ""
+                                            },
+                                            {
+                                                "type": "text",
+                                                "label": "Email",
+                                                "order": 3,
+                                                "regex": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+                                                "value": "",
+                                                "active": true,
+                                                "hidden": false,
+                                                "appType": "text",
+                                                "tooltip": "",
+                                                "helpText": "",
+                                                "jsonPath": "ApplicantEmail",
+                                                "metaData": {},
+                                                "readOnly": false,
+                                                "required": false,
+                                                "deleteFlag": false,
+                                                "innerLabel": "",
+                                                "defaultValue": "",
+                                                "errorMessage": "Please enter a valid email address"
+                                            },
+                                            {
+                                                "type": "dropdown",
+                                                "label": "Gender",
+                                                "order": 4,
+                                                "value": "",
+                                                "active": true,
+                                                "hidden": false,
+                                                "isMdms": true,
+                                                "appType": "dropdown",
+                                                "tooltip": "",
+                                                "helpText": "",
+                                                "jsonPath": "ApplicantGender",
+                                                "metaData": {},
+                                                "readOnly": false,
+                                                "required": false,
+                                                "deleteFlag": false,
+                                                "innerLabel": "",
+                                                "schemaCode": "common-masters.GenderType",
+                                                "MdmsDropdown": true,
+                                                "defaultValue": "",
+                                                "errorMessage": ""
+                                            }
+                                        ],
+                                        "header": "Applicant Details",
+                                        "description": "Applicant Information",
+                                        "sectionType": "applicant",
+                                        "headerFields": [
+                                            {
+                                                "type": "text",
+                                                "label": "SCREEN_HEADING",
+                                                "value": "Applicant Details",
+                                                "active": true,
+                                                "jsonPath": "ScreenHeading",
+                                                "metaData": {},
+                                                "required": true
+                                            },
+                                            {
+                                                "type": "text",
+                                                "label": "SCREEN_DESCRIPTION",
+                                                "value": "Please provide your personal information",
+                                                "active": true,
+                                                "jsonPath": "Description",
+                                                "metaData": {},
+                                                "required": true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "fields": [
+                                            {
+                                                "type": "dropdown",
+                                                "label": "complaint type",
+                                                "regex": "",
+                                                "active": true,
+                                                "isMdms": false,
+                                                "appType": "dropdown",
+                                                "tooltip": "",
+                                                "helpText": "",
+                                                "hintText": "",
+                                                "jsonPath": "beneficiaryLocation_Header_newField1",
+                                                "maxFiles": "",
+                                                "readOnly": false,
+                                                "required": false,
+                                                "charCount": false,
+                                                "maxLength": "",
+                                                "minLength": "",
+                                                "deleteFlag": true,
+                                                "innerLabel": "",
+                                                "schemaCode": "",
+                                                "maxFileSize": "",
+                                                "MdmsDropdown": false,
+                                                "defaultValue": "",
+                                                "errorMessage": "",
+                                                "isdCodePrefix": "",
+                                                "showHintBelow": false,
+                                                "showTextInput": false,
+                                                "isBoundaryData": false,
+                                                "templatePDFKey": "",
+                                                "dropDownOptions": [
+                                                    {
+                                                        "code": "39f3bde5-9ea7-41b4-8bc0-7f5b7559c0c5",
+                                                        "name": "Street Lights"
+                                                    },
+                                                    {
+                                                        "code": "6e8fd907-f5e4-478c-844c-71f12afe15b4",
+                                                        "name": "Road block"
+                                                    }
+                                                ],
+                                                "allowedFileTypes": [],
+                                                "templateDownloadURL": ""
+                                            },
+                                            {
+                                                "type": "dropdown",
+                                                "label": "complaint subtype",
+                                                "regex": "",
+                                                "active": true,
+                                                "isMdms": false,
+                                                "appType": "dropdown",
+                                                "tooltip": "",
+                                                "helpText": "",
+                                                "hintText": "",
+                                                "jsonPath": "beneficiaryLocation_Header_newField2",
+                                                "maxFiles": "",
+                                                "readOnly": false,
+                                                "required": false,
+                                                "charCount": false,
+                                                "maxLength": "",
+                                                "minLength": "",
+                                                "deleteFlag": true,
+                                                "innerLabel": "",
+                                                "schemaCode": "",
+                                                "maxFileSize": "",
+                                                "MdmsDropdown": false,
+                                                "defaultValue": "",
+                                                "errorMessage": "",
+                                                "isdCodePrefix": "",
+                                                "showHintBelow": false,
+                                                "showTextInput": false,
+                                                "isBoundaryData": false,
+                                                "templatePDFKey": "",
+                                                "dropDownOptions": [
+                                                    {
+                                                        "code": "f47ad2af-6d17-4cf9-9529-b904e12cc25d",
+                                                        "name": "Need to install light"
+                                                    },
+                                                    {
+                                                        "code": "98af6762-ae77-445a-800b-8cb83a8d547f",
+                                                        "name": "Road water block"
+                                                    }
+                                                ],
+                                                "allowedFileTypes": [],
+                                                "templateDownloadURL": ""
+                                            }
+                                        ],
+                                        "header": "Header",
+                                        "description": "Desc",
+                                        "headerFields": [
+                                            {
+                                                "type": "text",
+                                                "label": "SCREEN_HEADING",
+                                                "value": "Section 2",
+                                                "active": true,
+                                                "jsonPath": "ScreenHeading",
+                                                "metaData": {},
+                                                "required": true
+                                            },
+                                            {
+                                                "type": "text",
+                                                "label": "SCREEN_DESCRIPTION",
+                                                "value": "Description for Section 2",
+                                                "active": true,
+                                                "jsonPath": "Description",
+                                                "metaData": {},
+                                                "required": true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "fields": [
+                                            {
+                                                "type": "text",
+                                                "label": "Pincode",
+                                                "order": 1,
+                                                "regex": "^[1-9][0-9]{5}$",
+                                                "value": "",
+                                                "active": true,
+                                                "hidden": false,
+                                                "appType": "text",
+                                                "tooltip": "",
+                                                "helpText": "",
+                                                "jsonPath": "AddressPincode",
+                                                "metaData": {},
+                                                "readOnly": false,
+                                                "required": false,
+                                                "deleteFlag": false,
+                                                "innerLabel": "",
+                                                "defaultValue": "",
+                                                "errorMessage": "Please enter a valid 6-digit pincode"
+                                            },
+                                            {
+                                                "type": "text",
+                                                "label": "Street Name",
+                                                "order": 2,
+                                                "value": "",
+                                                "active": true,
+                                                "hidden": false,
+                                                "appType": "text",
+                                                "tooltip": "",
+                                                "helpText": "",
+                                                "jsonPath": "AddressStreet",
+                                                "metaData": {},
+                                                "readOnly": false,
+                                                "required": false,
+                                                "deleteFlag": false,
+                                                "innerLabel": "",
+                                                "defaultValue": "",
+                                                "errorMessage": ""
+                                            },
+                                            {
+                                                "type": "hierarchyDropdown",
+                                                "label": "Area Selection",
+                                                "order": 3,
+                                                "value": "",
+                                                "active": true,
+                                                "hidden": false,
+                                                "appType": "hierarchyDropdown",
+                                                "tooltip": "",
+                                                "helpText": "",
+                                                "jsonPath": "AddressLocation",
+                                                "metaData": {},
+                                                "readOnly": false,
+                                                "required": false,
+                                                "component": "HierarchyDropdown",
+                                                "deleteFlag": false,
+                                                "innerLabel": "",
+                                                "populators": {
+                                                    "name": "boundaryHierarchy",
+                                                    "autoSelect": true,
+                                                    "hierarchyType": "ADMIN",
+                                                    "lowestHierarchy": "VILLAGE",
+                                                    "highestHierarchy": "COUNTRY"
+                                                },
+                                                "defaultValue": "",
+                                                "errorMessage": ""
+                                            },
+                                            {
+                                                "type": "mapcoord",
+                                                "label": "Select Location on Map",
+                                                "order": 4,
+                                                "value": "",
+                                                "active": true,
+                                                "format": "component",
+                                                "hidden": false,
+                                                "appType": "mapcoord",
+                                                "disable": false,
+                                                "tooltip": "",
+                                                "helpText": "",
+                                                "jsonPath": "AddressMapCoord",
+                                                "metaData": {},
+                                                "readOnly": false,
+                                                "required": false,
+                                                "component": "MapWithInput",
+                                                "deleteFlag": false,
+                                                "innerLabel": "",
+                                                "defaultValue": "",
+                                                "errorMessage": ""
+                                            }
+                                        ],
+                                        "header": "Address Details",
+                                        "description": "Address Information",
+                                        "sectionType": "address",
+                                        "headerFields": [
+                                            {
+                                                "type": "text",
+                                                "label": "SCREEN_HEADING",
+                                                "value": "Address Details",
+                                                "active": true,
+                                                "jsonPath": "ScreenHeading",
+                                                "metaData": {},
+                                                "required": true
+                                            },
+                                            {
+                                                "type": "text",
+                                                "label": "SCREEN_DESCRIPTION",
+                                                "value": "Please provide your address information",
+                                                "active": true,
+                                                "jsonPath": "Description",
+                                                "metaData": {},
+                                                "required": true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "fields": [
+                                            {
+                                                "type": "documentUpload",
+                                                "label": "complaint proof",
+                                                "active": true,
+                                                "appType": "documentUpload",
+                                                "tooltip": "",
+                                                "helpText": "",
+                                                "jsonPath": "beneficiaryLocation_Document Section_newField1",
+                                                "deleteFlag": true,
+                                                "innerLabel": "",
+                                                "defaultValue": "",
+                                                "errorMessage": ""
+                                            }
+                                        ],
+                                        "header": "Document Section",
+                                        "description": "Document Upload and Download",
+                                        "sectionType": "document",
+                                        "headerFields": [
+                                            {
+                                                "type": "text",
+                                                "label": "SCREEN_HEADING",
+                                                "value": "Document Section",
+                                                "active": true,
+                                                "jsonPath": "ScreenHeading",
+                                                "metaData": {},
+                                                "required": true
+                                            },
+                                            {
+                                                "type": "text",
+                                                "label": "SCREEN_DESCRIPTION",
+                                                "value": "Please upload required documents",
+                                                "active": true,
+                                                "jsonPath": "Description",
+                                                "metaData": {},
+                                                "required": true
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "order": 1,
+                                "config": {
+                                    "enableComment": false,
+                                    "enableFieldAddition": true,
+                                    "allowFieldsAdditionAt": [
+                                        "body"
+                                    ],
+                                    "enableSectionAddition": false,
+                                    "allowCommentsAdditionAt": [
+                                        "body"
+                                    ]
+                                },
+                                "parent": "REGISTRATIONFLOW",
+                                "navigateTo": {
+                                    "name": "householdDetails",
+                                    "type": "form"
+                                },
+                                "actionLabel": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1"
+                            }
+                        ]
+                    },
+                    "localization": {},
+                    "formDescription": ""
+                }
+            ],
+            "uiroles": [
+                {
+                    "code": "STUDIO_CITIZEN",
+                    "active": true,
+                    "category": "{{module}}_{{service}}",
+                    "isActive": true,
+                    "description": "Default Citizen Role",
+                    "additionalDetails": {
+                        "access": {
+                            "editor": true,
+                            "viewer": true,
+                            "creater": true
+                        },
+                        "isDefaultRole": true,
+                        "selfRegistration": false
+                    }
+                },
+                {
+                    "code": "complaint evaluator",
+                    "active": true,
+                    "category": "{{module}}_{{service}}",
+                    "isActive": true,
+                    "description": "",
+                    "additionalDetails": {
+                        "access": {
+                            "editor": true,
+                            "viewer": true,
+                            "creater": false
+                        },
+                        "isDefaultRole": false,
+                        "selfRegistration": false
+                    }
+                }
+            ],
+            "boundary": {
+                "lowestLevel": "VILLAGE",
+                "highestLevel": "COUNTRY",
+                "hierarchyType": "ADMIN"
+            },
+            "workflow": {
+                "ACTIVE": [],
+                "states": [
+                    {
+                        "sla": null,
+                        "state": null,
+                        "actions": [
+                            {
+                                "roles": [
+                                    "STUDIO_CITIZEN",
+                                    "STUDIO_ADMIN"
+                                ],
+                                "action": "APPLIED",
+                                "nextState": "PENDING_FOR_ASSIGNMENT"
+                            }
+                        ],
+                        "isStartState": true,
+                        "isStateUpdatable": true,
+                        "isTerminateState": false,
+                        "applicationStatus": null,
+                        "docUploadRequired": false
+                    },
+                    {
+                        "sla": 86400000,
+                        "state": "PENDING_FOR_ASSIGNMENT",
+                        "actions": [
+                            {
+                                "roles": [
+                                    "{{module}}_{{service}}_COMPLAINT_EVALUATOR",
+                                    "STUDIO_ADMIN"
+                                ],
+                                "action": "REJECT",
+                                "nextState": "REJECTED"
+                            },
+                            {
+                                "roles": [
+                                    "{{module}}_{{service}}_COMPLAINT_EVALUATOR",
+                                    "STUDIO_ADMIN"
+                                ],
+                                "action": "ASSIGN",
+                                "nextState": "PENDING_AT_LME"
+                            }
+                        ],
+                        "isStartState": false,
+                        "isStateUpdatable": true,
+                        "isTerminateState": false,
+                        "applicationStatus": null,
+                        "docUploadRequired": false
+                    },
+                    {
+                        "sla": null,
+                        "state": "REJECTED",
+                        "actions": [],
+                        "isStartState": false,
+                        "isStateUpdatable": true,
+                        "isTerminateState": true,
+                        "applicationStatus": null,
+                        "docUploadRequired": false
+                    },
+                    {
+                        "sla": null,
+                        "state": "RESOLVED",
+                        "actions": [],
+                        "isStartState": false,
+                        "isStateUpdatable": true,
+                        "isTerminateState": true,
+                        "applicationStatus": null,
+                        "docUploadRequired": false
+                    },
+                    {
+                        "sla": 86400000,
+                        "state": "PENDING_AT_LME",
+                        "actions": [
+                            {
+                                "roles": [
+                                    "{{module}}_{{service}}_COMPLAINT_EVALUATOR",
+                                    "STUDIO_ADMIN"
+                                ],
+                                "action": "RESOLVE",
+                                "nextState": "RESOLVED"
+                            },
+                            {
+                                "roles": [
+                                    "{{module}}_{{service}}_COMPLAINT_EVALUATOR",
+                                    "STUDIO_ADMIN"
+                                ],
+                                "action": "REASSIGN",
+                                "nextState": "PENDING_FOR_ASSIGNMENT"
+                            }
+                        ],
+                        "isStartState": false,
+                        "isStateUpdatable": true,
+                        "isTerminateState": false,
+                        "applicationStatus": null,
+                        "docUploadRequired": false
+                    }
+                ],
+                "INACTIVE": [],
+                "business": "public-services",
+                "businessService": "{{module}}.{{service}}",
+                "generateDemandAt": [],
+                "businessServiceSla": 172800000,
+                "nextActionAfterPayment": "",
+                "autoTransitionEnabledStates": []
+            },
+            "apiconfig": [
+                {
+                    "host": "https://staging.digit.org",
+                    "type": "register",
+                    "method": "post",
+                    "service": "{{service}}",
+                    "endpoint": "/{{service}}-services/v1/create"
+                },
+                {
+                    "host": "https://staging.digit.org",
+                    "type": "search",
+                    "method": "post",
+                    "service": "{{service}}",
+                    "endpoint": "/{{service}}-services/v1/search"
+                }
+            ],
+            "applicant": {
+                "types": [
+                    "individual",
+                    "organisation"
+                ],
+                "config": {
+                    "systemUser": true,
+                    "systemRoles": [
+                        "STUDIO_CITIZEN"
+                    ],
+                    "systemUserType": "CITIZEN"
+                },
+                "maximum": 3,
+                "minimum": 1,
+                "searchby": [],
+                "individual": {
+                    "properties": [
+                        {
+                            "name": "name",
+                            "path": "individual.name",
+                            "type": "string",
+                            "label": "Name",
+                            "format": "text",
+                            "required": true,
+                            "orderNumber": 1
+                        },
+                        {
+                            "name": "mobilenumber",
+                            "path": "individual.mobilenumber",
+                            "type": "mobileNumber",
+                            "label": "Mobile Number",
+                            "format": "mobileNumber",
+                            "prefix": "+91",
+                            "required": true,
+                            "maxLength": 10,
+                            "minLength": 0,
+                            "orderNumber": 2
+                        },
+                        {
+                            "name": "email",
+                            "path": "individual.email",
+                            "type": "string",
+                            "label": "Email",
+                            "format": "text",
+                            "required": false,
+                            "validation": {
+                                "regex": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+                                "message": "Please enter a valid email address"
+                            },
+                            "orderNumber": 3
+                        },
+                        {
+                            "name": "gender",
+                            "path": "individual.gender",
+                            "type": "string",
+                            "label": "Gender",
+                            "format": "radioordropdown",
+                            "schema": "common-masters.GenderType",
+                            "required": false,
+                            "reference": "mdms",
+                            "orderNumber": 4
+                        }
+                    ]
+                },
+                "organisation": {
+                    "properties": []
+                },
+                "allowLoggedInUser": false
+            },
+            "checklist": [
+                {
+                    "name": "complaint details",
+                    "state": "PENDING_FOR_ASSIGNMENT",
+                    "checklistData": {
+                        "data": [
+                            {
+                                "id": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c",
+                                "key": 1,
+                                "type": {
+                                    "code": "SingleValueList"
+                                },
+                                "level": 1,
+                                "title": "Is user verified",
+                                "value": null,
+                                "options": [
+                                    {
+                                        "id": "0cff9846-03a2-4453-bf0e-200cdda5f390",
+                                        "key": 1,
+                                        "label": "yes",
+                                        "subQuestions": [],
+                                        "optionComment": false,
+                                        "optionDependency": false,
+                                        "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                                    },
+                                    {
+                                        "id": "option_2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c_2",
+                                        "key": 2,
+                                        "label": "no",
+                                        "subQuestions": [],
+                                        "optionDependency": false,
+                                        "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                                    }
+                                ],
+                                "isActive": true,
+                                "parentId": null,
+                                "isRequired": false,
+                                "subQuestions": []
+                            },
+                            {
+                                "id": "question_L1_3",
+                                "key": 2,
+                                "type": {
+                                    "code": "Text",
+                                    "i18nKey": "STUDIO_TEXT"
+                                },
+                                "level": 1,
+                                "regex": null,
+                                "title": "Additional details to improve",
+                                "value": null,
+                                "options": [],
+                                "isActive": true,
+                                "parentId": null,
+                                "isRequired": false,
+                                "subQuestions": []
+                            }
+                        ],
+                        "name": "complaint details",
+                        "isActive": true,
+                        "description": ""
+                    }
+                },
+                {
+                    "name": "complaint details",
+                    "state": "REJECTED",
+                    "checklistData": {
+                        "data": [
+                            {
+                                "id": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c",
+                                "key": 1,
+                                "type": {
+                                    "code": "SingleValueList"
+                                },
+                                "level": 1,
+                                "title": "Is user verified",
+                                "value": null,
+                                "options": [
+                                    {
+                                        "id": "0cff9846-03a2-4453-bf0e-200cdda5f390",
+                                        "key": 1,
+                                        "label": "yes",
+                                        "subQuestions": [],
+                                        "optionComment": false,
+                                        "optionDependency": false,
+                                        "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                                    },
+                                    {
+                                        "id": "option_2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c_2",
+                                        "key": 2,
+                                        "label": "no",
+                                        "subQuestions": [],
+                                        "optionDependency": false,
+                                        "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                                    }
+                                ],
+                                "isActive": true,
+                                "parentId": null,
+                                "isRequired": false,
+                                "subQuestions": []
+                            },
+                            {
+                                "id": "question_L1_3",
+                                "key": 2,
+                                "type": {
+                                    "code": "Text",
+                                    "i18nKey": "STUDIO_TEXT"
+                                },
+                                "level": 1,
+                                "regex": null,
+                                "title": "Additional details to improve",
+                                "value": null,
+                                "options": [],
+                                "isActive": true,
+                                "parentId": null,
+                                "isRequired": false,
+                                "subQuestions": []
+                            }
+                        ],
+                        "name": "complaint details",
+                        "isActive": true,
+                        "description": ""
+                    }
+                },
+                {
+                    "name": "complaint details",
+                    "state": "PENDING_AT_LME",
+                    "checklistData": {
+                        "data": [
+                            {
+                                "id": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c",
+                                "key": 1,
+                                "type": {
+                                    "code": "SingleValueList"
+                                },
+                                "level": 1,
+                                "title": "Is user verified",
+                                "value": null,
+                                "options": [
+                                    {
+                                        "id": "0cff9846-03a2-4453-bf0e-200cdda5f390",
+                                        "key": 1,
+                                        "label": "yes",
+                                        "subQuestions": [],
+                                        "optionComment": false,
+                                        "optionDependency": false,
+                                        "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                                    },
+                                    {
+                                        "id": "option_2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c_2",
+                                        "key": 2,
+                                        "label": "no",
+                                        "subQuestions": [],
+                                        "optionDependency": false,
+                                        "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                                    }
+                                ],
+                                "isActive": true,
+                                "parentId": null,
+                                "isRequired": false,
+                                "subQuestions": []
+                            },
+                            {
+                                "id": "question_L1_3",
+                                "key": 2,
+                                "type": {
+                                    "code": "Text",
+                                    "i18nKey": "STUDIO_TEXT"
+                                },
+                                "level": 1,
+                                "regex": null,
+                                "title": "Additional details to improve",
+                                "value": null,
+                                "options": [],
+                                "isActive": true,
+                                "parentId": null,
+                                "isRequired": false,
+                                "subQuestions": []
+                            }
+                        ],
+                        "name": "complaint details",
+                        "isActive": true,
+                        "description": ""
+                    }
+                }
+            ],
+            "documents": [
+                {
+                    "module": "{{module}}{{service}}",
+                    "actions": [
+                        {
+                            "action": "APPLIED",
+                            "assignee": {
+                                "show": false,
+                                "isMandatory": false
+                            },
+                            "comments": {
+                                "show": false,
+                                "isMandatory": false
+                            },
+                            "documents": [
+                                {
+                                    "code": "complaintproof",
+                                    "name": "complaint proof",
+                                    "active": true,
+                                    "hintText": "",
+                                    "isMandatory": false,
+                                    "maxSizeInMB": 5,
+                                    "documentType": "Document",
+                                    "showHintBelow": false,
+                                    "showTextInput": false,
+                                    "templatePDFKey": null,
+                                    "maxFilesAllowed": 1,
+                                    "allowedFileTypes": [
+                                        "pdf",
+                                        "doc",
+                                        "docx",
+                                        "jpeg",
+                                        "jpg",
+                                        "png"
+                                    ],
+                                    "templateDownloadURL": null
+                                }
+                            ]
+                        },
+                        {
+                            "action": "REJECT",
+                            "assignee": {
+                                "show": false,
+                                "isMandatory": false
+                            },
+                            "comments": {
+                                "show": true,
+                                "isMandatory": false
+                            },
+                            "documents": []
+                        },
+                        {
+                            "action": "ASSIGN",
+                            "assignee": {
+                                "show": true,
+                                "isMandatory": false
+                            },
+                            "comments": {
+                                "show": true,
+                                "isMandatory": false
+                            },
+                            "documents": []
+                        },
+                        {
+                            "action": "RESOLVE",
+                            "assignee": {
+                                "show": false,
+                                "isMandatory": false
+                            },
+                            "comments": {
+                                "show": false,
+                                "isMandatory": false
+                            },
+                            "documents": []
+                        },
+                        {
+                            "action": "REASSIGN",
+                            "assignee": {
+                                "show": true,
+                                "isMandatory": false
+                            },
+                            "comments": {
+                                "show": true,
+                                "isMandatory": false
+                            },
+                            "documents": []
+                        }
+                    ],
+                    "bannerLabel": "OBPS_BANNER",
+                    "maxSizeInMB": 5,
+                    "allowedFileTypes": [
+                        "pdf",
+                        "doc",
+                        "docx",
+                        "xlsx",
+                        "xls",
+                        "jpeg",
+                        "jpg",
+                        "png"
+                    ]
+                }
+            ],
+            "calculator": {
+                "type": "custom",
+                "billingSlabs": [
+                    {
+                        "key": "applicationFee",
+                        "value": 2000
+                    }
+                ]
+            },
+            "uiworkflow": {
+                "connections": [
+                    {
+                        "id": 1765870538802,
+                        "to": 1765870534067,
+                        "desc": "",
+                        "from": 1765870533400,
+                        "type": "action",
+                        "label": "Applied",
+                        "aroles": [
+                            {
+                                "code": "STUDIO_CITIZEN",
+                                "name": "Citizen"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 1765870542097,
+                        "to": 1765870534691,
+                        "desc": "",
+                        "from": 1765870534067,
+                        "type": "action",
+                        "label": "Reject",
+                        "aroles": [
+                            {
+                                "code": "complaint evaluator",
+                                "name": "Complaint evaluator"
+                            }
+                        ],
+                        "acomments": true
+                    },
+                    {
+                        "id": 1765870544563,
+                        "to": 1765870544563,
+                        "desc": "",
+                        "from": 1765870534067,
+                        "type": "action",
+                        "label": "Assign",
+                        "aroles": [
+                            {
+                                "code": "complaint evaluator",
+                                "name": "Complaint evaluator"
+                            }
+                        ],
+                        "aassign": true,
+                        "acomments": true
+                    },
+                    {
+                        "id": 1765870557908,
+                        "to": 1765870534977,
+                        "desc": "",
+                        "from": 1765870544563,
+                        "type": "action",
+                        "label": "Resolve",
+                        "aroles": [
+                            {
+                                "code": "complaint evaluator",
+                                "name": "Complaint evaluator"
+                            }
+                        ]
+                    },
+                    {
+                        "id": 1765870561172,
+                        "to": 1765870534067,
+                        "desc": "",
+                        "from": 1765870544563,
+                        "type": "action",
+                        "label": "Reassign",
+                        "aroles": [
+                            {
+                                "code": "complaint evaluator",
+                                "name": "Complaint evaluator"
+                            }
+                        ],
+                        "aassign": true,
+                        "acomments": true
+                    }
+                ],
+                "canvasElements": [
+                    {
+                        "id": 1765870533400,
+                        "sla": 24,
+                        "desc": "",
+                        "form": {
+                            "code": "complaint",
+                            "name": "complaint"
+                        },
+                        "name": "create",
+                        "type": "node",
+                        "roles": [],
+                        "nodetype": "start",
+                        "position": {
+                            "x": 100,
+                            "y": 300
+                        },
+                        "checklist": [],
+                        "sendnotif": [],
+                        "generatedoc": []
+                    },
+                    {
+                        "id": 1765870534067,
+                        "sla": 24,
+                        "desc": "",
+                        "form": [],
+                        "name": "Pending for assignment",
+                        "type": "node",
+                        "roles": [],
+                        "nodetype": "intermediate",
+                        "position": {
+                            "x": 365,
+                            "y": 0
+                        },
+                        "checklist": [
+                            {
+                                "code": "complaint details",
+                                "name": "complaint details"
+                            }
+                        ],
+                        "sendnotif": [],
+                        "generatedoc": []
+                    },
+                    {
+                        "id": 1765870534691,
+                        "sla": 24,
+                        "desc": "",
+                        "form": [],
+                        "name": "Rejected",
+                        "type": "node",
+                        "roles": [],
+                        "nodetype": "end",
+                        "position": {
+                            "x": 484,
+                            "y": 362
+                        },
+                        "checklist": [
+                            {
+                                "code": "complaint details",
+                                "name": "complaint details"
+                            }
+                        ],
+                        "sendnotif": [
+                            {
+                                "code": "complaint reject",
+                                "name": "complaint reject"
+                            }
+                        ],
+                        "generatedoc": []
+                    },
+                    {
+                        "id": 1765870534977,
+                        "sla": 24,
+                        "desc": "",
+                        "form": [],
+                        "name": "Resolved",
+                        "type": "node",
+                        "roles": [],
+                        "nodetype": "end",
+                        "position": {
+                            "x": 895,
+                            "y": 300
+                        },
+                        "checklist": [],
+                        "sendnotif": [
+                            {
+                                "code": "complaint resolved",
+                                "name": "complaint resolved"
+                            }
+                        ],
+                        "generatedoc": []
+                    },
+                    {
+                        "id": 1765870544563,
+                        "sla": 24,
+                        "desc": "",
+                        "form": [],
+                        "name": "pending at LME",
+                        "type": "node",
+                        "roles": [],
+                        "nodetype": "intermediate",
+                        "position": {
+                            "x": 828.4080694586313,
+                            "y": -62.75127681307457
+                        },
+                        "checklist": [
+                            {
+                                "code": "complaint details",
+                                "name": "complaint details"
+                            }
+                        ],
+                        "sendnotif": [],
+                        "generatedoc": []
+                    }
+                ]
+            },
+            "localization": {
+                "modules": [
+                    "digit-studio"
+                ]
+            },
+            "notification": {
+                "sms": [
+                    {
+                        "code": "complaint reject",
+                        "states": [
+                            "REJECTED"
+                        ],
+                        "template": "Hey {PublicService.applicants[0].Name} \napplication is rejected {PublicService.serviceDetails.Section2.complainttype} "
+                    }
+                ],
+                "push": [],
+                "email": [
+                    {
+                        "code": "complaint resolved",
+                        "states": [
+                            "RESOLVED"
+                        ],
+                        "subject": "complaint details",
+                        "template": "complaint resolved- {PublicService.applicants[0].Name}  {PublicService.serviceDetails.Section2.complainttype} "
+                    }
+                ]
+            },
+            "uichecklists": [
+                {
+                    "data": [
+                        {
+                            "id": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c",
+                            "key": 1,
+                            "type": {
+                                "code": "SingleValueList"
+                            },
+                            "level": 1,
+                            "title": "Is user verified",
+                            "value": null,
+                            "options": [
+                                {
+                                    "id": "0cff9846-03a2-4453-bf0e-200cdda5f390",
+                                    "key": 1,
+                                    "label": "yes",
+                                    "subQuestions": [],
+                                    "optionComment": false,
+                                    "optionDependency": false,
+                                    "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                                },
+                                {
+                                    "id": "option_2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c_2",
+                                    "key": 2,
+                                    "label": "no",
+                                    "subQuestions": [],
+                                    "optionDependency": false,
+                                    "parentQuestionId": "2d4a7b1e-1f2f-4a8a-9672-43396c6c9a1c"
+                                }
+                            ],
+                            "isActive": true,
+                            "parentId": null,
+                            "isRequired": false,
+                            "subQuestions": []
+                        },
+                        {
+                            "id": "question_L1_3",
+                            "key": 2,
+                            "type": {
+                                "code": "Text",
+                                "i18nKey": "STUDIO_TEXT"
+                            },
+                            "level": 1,
+                            "regex": null,
+                            "title": "Additional details to improve",
+                            "value": null,
+                            "isActive": true,
+                            "parentId": null,
+                            "isRequired": false,
+                            "subQuestions": []
+                        }
+                    ],
+                    "name": "complaint details",
+                    "isActive": true,
+                    "description": ""
+                }
+            ],
+            "uinotifications": [
+                {
+                    "title": "complaint resolved",
+                    "subject": "complaint details",
+                    "isActive": true,
+                    "messageBody": "complaint resolved- {PublicService.applicants[0].Name}  {PublicService.serviceDetails.Section2.complainttype} ",
+                    "additionalDetails": {
+                        "type": "email",
+                        "category": "{{module}}_{{service}}",
+                        "workflow": [],
+                        "createdDate": 1765870442828,
+                        "selectedForm": {
+                            "code": "complaint",
+                            "name": "complaint"
+                        }
+                    }
+                },
+                {
+                    "title": "complaint reject",
+                    "subject": "",
+                    "isActive": true,
+                    "messageBody": "Hey {PublicService.applicants[0].Name} \napplication is rejected {PublicService.serviceDetails.Section2.complainttype} ",
+                    "additionalDetails": {
+                        "type": "sms",
+                        "category": "{{module}}_{{service}}",
+                        "workflow": [],
+                        "createdDate": 1765870492144,
+                        "selectedForm": {
+                            "code": "complaint",
+                            "name": "complaint"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

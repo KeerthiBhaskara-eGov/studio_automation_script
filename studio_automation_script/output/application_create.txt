@@ -1,0 +1,7 @@
+--- Application Create ---
+Status Code: 200
+Module: ModuleIRYKAB
+Service: Service15G3NK
+Service Code: ModuleIRYKAB-Service15G3NK-svc-2025-12-08-008519
+Application Number: ModuleIRYKAB-Service15G3NK-app-2025-12-08-008521
+Result: Success
