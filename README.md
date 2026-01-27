@@ -114,22 +114,36 @@ pytest test_e2e_flow.py -v -s --html=reports/e2e_report.html --self-contained-ht
 - Phase 3: Application Flow (8 tests)
 - Phase 4: Final Verification (3 tests)
 
-### 2. Individual Test Modules
+### 2. Test Modules (By Category)
 
-Run specific test phases:
+Run entire test modules by category:
 
 ```bash
-# Service setup only
-pytest tests/test_studio_services.py -v -s
+# Service Setup
+pytest tests/test_studio_services.py -v -s                    # MDMS draft, service create, public service init
 
-# Application tests only
-pytest tests/test_application.py -v -s
+# Application Lifecycle
+pytest tests/test_application.py -v -s                        # Create, assign, resolve application
 
-# All verification tests
+# Checklist Tests
+pytest tests/test_checklist_create.py -v -s                   # Checklist submission
+pytest tests/test_checklist_search.py -v -s                   # Checklist verification
+
+# Verification/Search Tests (run after 15-min wait)
+pytest tests/test_actions_roleactions_search.py -v -s         # Actions & role-actions
+pytest tests/test_roles_search.py -v -s                       # Roles verification
+pytest tests/test_workflow_search.py -v -s                    # Workflow validation
+pytest tests/test_idgen_search.py -v -s                       # ID generation formats
+pytest tests/test_localization_search.py -v -s                # Localization keys
+
+# Data Search Tests
+pytest tests/test_individual_search.py -v -s                  # Individual/applicant search
+pytest tests/test_process_instance_search.py -v -s            # Process instance tracking
+pytest tests/test_application_search.py -v -s                 # Application search
+pytest tests/test_inbox_search.py -v -s                       # Inbox verification
+
+# All verification tests at once
 pytest tests/test_*_search.py -v -s
-
-# Specific test
-pytest tests/test_workflow_search.py::test_workflow_validate -v -s
 ```
 
 ### 3. Negative/Security Tests (Data-Driven)
@@ -140,13 +154,139 @@ Run negative scenarios using `test_data_driven.py`:
 # All negative tests
 pytest tests/test_data_driven.py -v -s
 
-# Specific negative test suites
-pytest tests/test_data_driven.py::TestMDMSDraftNegative -v -s
-pytest tests/test_data_driven.py::TestApplicationNegative -v -s
-pytest tests/test_data_driven.py::TestSecurityScenarios -v -s
+# Run specific negative test suites individually
+pytest tests/test_data_driven.py::TestMDMSDraftNegative -v -s                  # MDMS draft negative tests
+pytest tests/test_data_driven.py::TestMDMSServiceCreateNegative -v -s          # MDMS service create negative tests
+pytest tests/test_data_driven.py::TestPublicServiceInitNegative -v -s          # Public service init negative tests
+pytest tests/test_data_driven.py::TestAuthenticationNegative -v -s             # Authentication negative tests
+pytest tests/test_data_driven.py::TestApplicationNegative -v -s                # Application negative tests
+pytest tests/test_data_driven.py::TestWorkflowNegative -v -s                   # Workflow negative tests
+pytest tests/test_data_driven.py::TestChecklistNegative -v -s                  # Checklist negative tests
+pytest tests/test_data_driven.py::TestSearchNegative -v -s                     # Search negative tests
+pytest tests/test_data_driven.py::TestSecurityScenarios -v -s                  # Security scenarios (XSS, SQL injection)
+pytest tests/test_data_driven.py::TestAllNegativeScenarios -v -s               # Summary of all scenarios
 ```
 
 **Note:** Negative tests require `test_scenarios_config.json` file with test scenarios.
+
+### 4. Individual E2E Tests
+
+Run specific E2E tests from the main flow:
+
+```bash
+# Phase 1: Service Setup
+pytest test_e2e_flow.py::test_01_mdms_draft_create -v -s
+pytest test_e2e_flow.py::test_02_mdms_service_create -v -s
+pytest test_e2e_flow.py::test_03_public_service_init -v -s
+
+# Phase 2: Verification Tests
+pytest test_e2e_flow.py::test_04_actions_search -v -s
+pytest test_e2e_flow.py::test_05_roleactions_search -v -s
+pytest test_e2e_flow.py::test_06_checklist_search -v -s
+pytest test_e2e_flow.py::test_07_idgen_search -v -s
+pytest test_e2e_flow.py::test_08_localization_search -v -s
+pytest test_e2e_flow.py::test_09_roles_search -v -s
+pytest test_e2e_flow.py::test_10_workflow_validate -v -s
+
+# Phase 3: Application Flow
+pytest test_e2e_flow.py::test_11_application_create -v -s
+pytest test_e2e_flow.py::test_12_checklist_create_all_and_submit -v -s
+pytest test_e2e_flow.py::test_13_individual_search -v -s
+pytest test_e2e_flow.py::test_14_process_instance_after_create -v -s
+pytest test_e2e_flow.py::test_15_application_assign -v -s
+pytest test_e2e_flow.py::test_16_process_instance_after_assign -v -s
+pytest test_e2e_flow.py::test_17_application_resolve -v -s
+pytest test_e2e_flow.py::test_18_process_instance_after_resolve -v -s
+
+# Phase 4: Final Verification
+pytest test_e2e_flow.py::test_19_application_search -v -s
+pytest test_e2e_flow.py::test_20_application_search_by_service_code -v -s
+pytest test_e2e_flow.py::test_21_inbox_search -v -s
+```
+
+**Note:** Individual E2E tests may fail if prerequisites haven't run. Always run the full E2E flow first.
+
+### 5. Service Tests Module
+
+Run tests from `test_studio_services.py`:
+
+```bash
+# All service tests
+pytest tests/test_studio_services.py -v -s
+
+# Individual service tests
+pytest tests/test_studio_services.py::test_mdms_draft_create -v -s
+pytest tests/test_studio_services.py::test_mdms_service_create -v -s
+pytest tests/test_studio_services.py::test_public_service_init -v -s
+pytest tests/test_studio_services.py::test_complete_studio_setup -v -s        # Runs all 3 in sequence
+```
+
+### 6. Application Tests Module
+
+Run tests from `test_application.py`:
+
+```bash
+# All application tests
+pytest tests/test_application.py -v -s
+
+# Individual application tests
+pytest tests/test_application.py::test_application_create -v -s
+pytest tests/test_application.py::test_application_assign -v -s
+pytest tests/test_application.py::test_application_resolve -v -s
+pytest tests/test_application.py::test_complete_application_flow -v -s        # Runs all 3 in sequence
+```
+
+### 7. Verification/Search Tests
+
+Run individual search/verification tests:
+
+```bash
+# Actions & Role-Actions
+pytest tests/test_actions_roleactions_search.py::test_actions_search -v -s
+pytest tests/test_actions_roleactions_search.py::test_roleactions_search -v -s
+
+# Checklist
+pytest tests/test_checklist_search.py::test_checklist_search -v -s
+pytest tests/test_checklist_create.py::test_checklist_for_current_state -v -s
+pytest tests/test_checklist_create.py::test_checklist_create_all_and_submit -v -s
+
+# Roles & Workflow
+pytest tests/test_roles_search.py::test_roles_search -v -s
+pytest tests/test_workflow_search.py::test_workflow_validate -v -s
+
+# ID Generation & Localization
+pytest tests/test_idgen_search.py::test_idgen_search -v -s
+pytest tests/test_localization_search.py::test_localization_search -v -s
+
+# Individual & Process Instance
+pytest tests/test_individual_search.py::test_individual_search -v -s
+pytest tests/test_process_instance_search.py::test_process_instance_after_create -v -s
+pytest tests/test_process_instance_search.py::test_process_instance_after_assign -v -s
+pytest tests/test_process_instance_search.py::test_process_instance_after_resolve -v -s
+
+# Application Search & Inbox
+pytest tests/test_application_search.py::test_application_search -v -s
+pytest tests/test_application_search.py::test_application_search_by_service_code -v -s
+pytest tests/test_inbox_search.py::test_inbox_search -v -s
+```
+
+### 8. Run Tests by Pattern
+
+Use pytest patterns to run multiple related tests:
+
+```bash
+# Run all search tests
+pytest tests/test_*_search.py -v -s
+
+# Run tests matching keyword
+pytest -k "search" -v -s                    # All tests with "search" in name
+pytest -k "application" -v -s               # All tests with "application" in name
+pytest -k "checklist" -v -s                 # All tests with "checklist" in name
+pytest -k "negative" -v -s                  # All negative tests
+
+# Run tests from specific directory
+pytest tests/ -v -s                         # All tests in tests directory
+```
 
 ---
 
@@ -360,12 +500,35 @@ A: Check HTML report for error details, review output files, manually clean up c
 | `TestMDMSDraftNegative` | MDMS draft validation failures |
 | `TestMDMSServiceCreateNegative` | Service create validation failures |
 | `TestPublicServiceInitNegative` | Public service init failures |
+| `TestAuthenticationNegative` | Authentication failures |
 | `TestApplicationNegative` | Application creation failures |
 | `TestWorkflowNegative` | Invalid workflow transitions |
 | `TestChecklistNegative` | Checklist submission failures |
-| `TestAuthenticationNegative` | Authentication failures |
-| `TestSecurityScenarios` | XSS, SQL injection, script injection |
 | `TestSearchNegative` | Invalid search parameters |
+| `TestSecurityScenarios` | XSS, SQL injection, script injection |
+| `TestAllNegativeScenarios` | Summary of all scenarios |
+
+**Run commands:** See [Section 3: Negative/Security Tests](#3-negativesecurity-tests-data-driven) above for detailed commands.
+
+### Test Modules Coverage
+
+| Module | Test Count | Description |
+|--------|------------|-------------|
+| `test_studio_services.py` | 4 | MDMS draft, service create, public service init, complete setup |
+| `test_application.py` | 4 | Application create, assign, resolve, complete flow |
+| `test_checklist_create.py` | 2 | Checklist submission for current/all states |
+| `test_checklist_search.py` | 2 | Checklist search and validation |
+| `test_actions_roleactions_search.py` | 2 | Actions and roleactions verification |
+| `test_roles_search.py` | 1 | Roles verification |
+| `test_workflow_search.py` | 1 | Workflow validation |
+| `test_idgen_search.py` | 1 | ID generation format verification |
+| `test_localization_search.py` | 1 | Localization verification |
+| `test_individual_search.py` | 1 | Individual search |
+| `test_process_instance_search.py` | 3 | Process instance tracking (create/assign/resolve) |
+| `test_application_search.py` | 2 | Application search (by number, by service code) |
+| `test_inbox_search.py` | 1 | Inbox verification |
+
+**Run commands:** See [Section 2: Test Modules](#2-test-modules-by-category), [Section 5: Service Tests](#5-service-tests-module), [Section 6: Application Tests](#6-application-tests-module), and [Section 7: Verification Tests](#7-verificationsearch-tests) for detailed commands.
 
 ---
 
@@ -453,6 +616,53 @@ docker run --env-file .env -v $(pwd)/reports:/app/reports digit-studio-tests
    cat output/mdms_response.json | jq .
    cat output/application_response.json | jq .
    ```
+
+---
+
+## Quick Reference - Common Commands
+
+```bash
+# ========== RECOMMENDED: Full E2E Test ==========
+pytest test_e2e_flow.py -v -s --html=reports/e2e_report.html --self-contained-html
+
+# ========== Run by Phase ==========
+# Phase 1: Service Setup
+pytest tests/test_studio_services.py -v -s
+
+# Phase 2: Verification (after 15-min wait)
+pytest tests/test_*_search.py -v -s
+
+# Phase 3: Application Flow
+pytest tests/test_application.py -v -s
+pytest tests/test_checklist_create.py -v -s
+
+# ========== Negative Tests ==========
+# All negative tests
+pytest tests/test_data_driven.py -v -s
+
+# Specific negative test suite
+pytest tests/test_data_driven.py::TestApplicationNegative -v -s
+pytest tests/test_data_driven.py::TestSecurityScenarios -v -s
+
+# ========== Individual E2E Tests ==========
+pytest test_e2e_flow.py::test_01_mdms_draft_create -v -s
+pytest test_e2e_flow.py::test_11_application_create -v -s
+pytest test_e2e_flow.py::test_21_inbox_search -v -s
+
+# ========== Clean & Rerun ==========
+rm -f output/*.json output/*.txt
+pytest test_e2e_flow.py -v -s --html=reports/e2e_report.html --self-contained-html
+
+# ========== Debug Mode ==========
+pytest test_e2e_flow.py -vv -s --tb=long
+pytest tests/test_application.py::test_application_create -vv -s --tb=long
+
+# ========== View Results ==========
+cat output/mdms_response.json | jq .
+cat output/application_response.json | jq .
+open reports/e2e_report.html  # macOS
+xdg-open reports/e2e_report.html  # Linux
+```
 
 ---
 
