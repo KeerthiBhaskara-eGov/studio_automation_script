@@ -1,0 +1,1411 @@
+{
+  "mdms_draft_scenarios": [
+    {
+      "name": "Missing Module Name",
+      "type": "negative",
+      "data": {
+        "module": null,
+        "service": "TestService"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Empty Module Name",
+      "type": "negative",
+      "data": {
+        "module": "",
+        "service": "TestService"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Missing Service Name",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": null
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Empty Service Name",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": ""
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Tenant ID",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "tenant_id": "invalid-tenant-xyz"
+      },
+      "expected": {
+        "status": [
+          400,
+          403,
+          404,
+          401
+        ]
+      }
+    },
+    {
+      "name": "Empty Tenant ID",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "tenant_id": ""
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          401
+        ]
+      }
+    },
+    {
+      "name": "Missing Workflow Definition",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "workflow": null
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Empty Workflow Array",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "workflow": []
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Schema Code",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "schema_code": "invalid.schema"
+      },
+      "expected": {
+        "status": [
+          400,
+          404
+        ]
+      }
+    },
+    {
+      "name": "Duplicate Unique Identifier",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "unique_id": "{{existing_unique_id}}"
+      },
+      "expected": {
+        "status": [
+          400,
+          409
+        ]
+      }
+    },
+    {
+      "name": "Missing Data Object",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "_no_data": true
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "XSS in Module Name",
+      "type": "security",
+      "data": {
+        "module": "<script>alert('xss')</script>",
+        "service": "TestService"
+      },
+      "expected": {
+        "should_sanitize": true
+      }
+    },
+    {
+      "name": "SQL Injection in Module Name",
+      "type": "security",
+      "data": {
+        "module": "'; DROP TABLE mdms; --",
+        "service": "TestService"
+      },
+      "expected": {
+        "should_sanitize": true
+      }
+    },
+    {
+      "name": "Very Long Module Name (1000 chars)",
+      "type": "boundary",
+      "data": {
+        "module": "{{REPEAT_A_1000}}",
+        "service": "TestService"
+      },
+      "expected": {
+        "status": [
+          200,
+          400,
+          413,
+          400
+        ]
+      }
+    },
+    {
+      "name": "Special Characters in Module Name",
+      "type": "negative",
+      "data": {
+        "module": "Test@Module#123!",
+        "service": "TestService"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Spaces in Module Name",
+      "type": "negative",
+      "data": {
+        "module": "Test Module",
+        "service": "TestService"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Missing RequestInfo",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "_no_request_info": true
+      },
+      "expected": {
+        "status": [
+          400,
+          401,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Empty Request Body",
+      "type": "negative",
+      "data": {
+        "_empty_body": true
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          401
+        ]
+      }
+    }
+  ],
+  "mdms_service_create_scenarios": [
+    {
+      "name": "Missing Module Name",
+      "type": "negative",
+      "data": {
+        "module": null,
+        "service": "TestService"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Empty Module Name",
+      "type": "negative",
+      "data": {
+        "module": "",
+        "service": "TestService"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Missing Service Name",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": null
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Empty Service Name",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": ""
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Tenant ID",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "tenant_id": "invalid-tenant"
+      },
+      "expected": {
+        "status": [
+          400,
+          403,
+          404,
+          401
+        ]
+      }
+    },
+    {
+      "name": "Duplicate Service Code",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "service_code": "{{existing_service_code}}"
+      },
+      "expected": {
+        "status": [
+          400,
+          409
+        ]
+      }
+    },
+    {
+      "name": "Missing Workflow Definition",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "workflow": null
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Empty Workflow Array",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "workflow": []
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Workflow - Missing State",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "workflow": [
+          {
+            "state": null,
+            "actions": [
+              "APPLY"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Workflow - Missing Actions",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "workflow": [
+          {
+            "state": "PENDING",
+            "actions": null
+          }
+        ]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Workflow - Empty Actions Array",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "workflow": [
+          {
+            "state": "PENDING",
+            "actions": []
+          }
+        ]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Missing Checklist Definition",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "checklist": null
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Checklist - Missing Name",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "checklist": [
+          {
+            "name": null,
+            "state": "PENDING"
+          }
+        ]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Checklist - Missing State",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "checklist": [
+          {
+            "name": "Test Checklist",
+            "state": null
+          }
+        ]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Checklist - Invalid Attribute DataType",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "checklist": [
+          {
+            "name": "Test",
+            "state": "PENDING",
+            "attributes": [
+              {
+                "name": "Attr1",
+                "dataType": "InvalidType"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Missing Roleactions Definition",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "roleactions": null
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Roleactions - Missing Role",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "roleactions": [
+          {
+            "role": null,
+            "actions": [
+              "VIEW"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Roleactions - Non-existent Role",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "roleactions": [
+          {
+            "role": "NON_EXISTENT_ROLE_XYZ",
+            "actions": [
+              "VIEW"
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "status": [
+          400,
+          404
+        ]
+      }
+    },
+    {
+      "name": "Missing IDGen Format",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "idgen": null
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid IDGen - Missing Format",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "idgen": [
+          {
+            "idname": "test.id",
+            "format": null
+          }
+        ]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Missing Localization",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "localization": null
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Localization - Missing Code",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "localization": [
+          {
+            "code": null,
+            "message": "Test"
+          }
+        ]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Localization - Missing Message",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "localization": [
+          {
+            "code": "TEST_CODE",
+            "message": null
+          }
+        ]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "XSS in Service Name",
+      "type": "security",
+      "data": {
+        "module": "TestModule",
+        "service": "<script>alert('xss')</script>"
+      },
+      "expected": {
+        "should_sanitize": true
+      }
+    },
+    {
+      "name": "SQL Injection in Service Name",
+      "type": "security",
+      "data": {
+        "module": "TestModule",
+        "service": "'; DROP TABLE services; --"
+      },
+      "expected": {
+        "should_sanitize": true
+      }
+    },
+    {
+      "name": "Empty Request Body",
+      "type": "negative",
+      "data": {
+        "_empty_body": true
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          401
+        ]
+      }
+    },
+    {
+      "name": "Missing RequestInfo",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "_no_request_info": true
+      },
+      "expected": {
+        "status": [
+          400,
+          401,
+          422
+        ]
+      }
+    }
+  ],
+  "public_service_init_scenarios": [
+    {
+      "name": "Invalid Tenant ID",
+      "type": "negative",
+      "data": {
+        "module": "{{existing_module}}",
+        "service": "{{existing_service}}",
+        "tenant_id": "invalid-tenant-xyz"
+      },
+      "expected": {
+        "status": [
+          400,
+          403,
+          404,
+          401,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Empty Tenant ID",
+      "type": "negative",
+      "data": {
+        "module": "{{existing_module}}",
+        "service": "{{existing_service}}",
+        "tenant_id": ""
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          401,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Duplicate Init with Same Module and Service",
+      "type": "negative",
+      "data": {
+        "module": "{{existing_module}}",
+        "service": "{{existing_service}}"
+      },
+      "expected": {
+        "status": [
+          200,
+          400,
+          409,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Missing Module Name",
+      "type": "negative",
+      "data": {
+        "module": null,
+        "service": "TestService"
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Empty Module Name",
+      "type": "negative",
+      "data": {
+        "module": "",
+        "service": "TestService"
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Missing Service Name",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": null
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Empty Service Name",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": ""
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          500
+        ]
+      }
+    },
+    {
+      "name": "XSS in Service Name",
+      "type": "security",
+      "data": {
+        "module": "TestModule",
+        "service": "<script>alert('xss')</script>"
+      },
+      "expected": {
+        "should_sanitize": true
+      }
+    },
+    {
+      "name": "SQL Injection in Service Name",
+      "type": "security",
+      "data": {
+        "module": "TestModule",
+        "service": "'; DROP TABLE services; --"
+      },
+      "expected": {
+        "should_sanitize": true
+      }
+    },
+    {
+      "name": "XSS in Module Name",
+      "type": "security",
+      "data": {
+        "module": "<script>alert('xss')</script>",
+        "service": "TestService"
+      },
+      "expected": {
+        "should_sanitize": true
+      }
+    },
+    {
+      "name": "SQL Injection in Module Name",
+      "type": "security",
+      "data": {
+        "module": "'; DROP TABLE modules; --",
+        "service": "TestService"
+      },
+      "expected": {
+        "should_sanitize": true
+      }
+    },
+    {
+      "name": "Very Long Service Name (1000 chars)",
+      "type": "boundary",
+      "data": {
+        "module": "TestModule",
+        "service": "{{REPEAT_A_1000}}"
+      },
+      "expected": {
+        "status": [
+          200,
+          400,
+          413,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Very Long Module Name (1000 chars)",
+      "type": "boundary",
+      "data": {
+        "module": "{{REPEAT_A_1000}}",
+        "service": "TestService"
+      },
+      "expected": {
+        "status": [
+          200,
+          400,
+          413,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Special Characters in Service Name",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "Test@Service#123!"
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Special Characters in Module Name",
+      "type": "negative",
+      "data": {
+        "module": "Test@Module#123!",
+        "service": "TestService"
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Spaces in Service Name",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "Test Service Name"
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Spaces in Module Name",
+      "type": "negative",
+      "data": {
+        "module": "Test Module Name",
+        "service": "TestService"
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Empty Request Body",
+      "type": "negative",
+      "data": {
+        "_empty_body": true
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          401
+        ]
+      }
+    },
+    {
+      "name": "Missing RequestInfo",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "_no_request_info": true
+      },
+      "expected": {
+        "status": [
+          400,
+          401,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Auth Token",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "auth_token": "invalid-token"
+      },
+      "expected": {
+        "status": [
+          401,
+          403
+        ]
+      }
+    },
+    {
+      "name": "Missing Auth Token",
+      "type": "negative",
+      "data": {
+        "module": "TestModule",
+        "service": "TestService",
+        "auth_token": null
+      },
+      "expected": {
+        "status": [
+          401,
+          403
+        ]
+      }
+    }
+  ],
+  "authentication_scenarios": [
+    {
+      "name": "Invalid Auth Token",
+      "type": "negative",
+      "data": {
+        "auth_token": "invalid-token-12345"
+      },
+      "expected": {
+        "status": [
+          401,
+          403,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Missing Auth Token",
+      "type": "negative",
+      "data": {
+        "auth_token": null
+      },
+      "expected": {
+        "status": [
+          401,
+          403,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Empty Auth Token",
+      "type": "negative",
+      "data": {
+        "auth_token": ""
+      },
+      "expected": {
+        "status": [
+          401,
+          403,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Expired Auth Token",
+      "type": "negative",
+      "data": {
+        "auth_token": "expired-token-12345"
+      },
+      "expected": {
+        "status": [
+          401,
+          403,
+          500
+        ]
+      }
+    }
+  ],
+  "application_scenarios": [
+    {
+      "name": "Empty Mobile Number",
+      "type": "negative",
+      "data": {
+        "mobile": null,
+        "name": "Test User"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Mobile Too Short (3 digits)",
+      "type": "negative",
+      "data": {
+        "mobile": 987,
+        "name": "Test User"
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Mobile Too Long (15 digits)",
+      "type": "negative",
+      "data": {
+        "mobile": 123456789012345,
+        "name": "Test User"
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Mobile with Letters",
+      "type": "negative",
+      "data": {
+        "mobile": "abcdefghij",
+        "name": "Test User"
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          401
+        ]
+      }
+    },
+    {
+      "name": "Mobile with Special Characters",
+      "type": "negative",
+      "data": {
+        "mobile": "!@#$%^&*()",
+        "name": "Test User"
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          401
+        ]
+      }
+    },
+    {
+      "name": "Mobile All Zeros",
+      "type": "negative",
+      "data": {
+        "mobile": "0000000000",
+        "name": "Test User"
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          401
+        ]
+      }
+    },
+    {
+      "name": "Non-existent Service Code (Similar Format)",
+      "type": "negative",
+      "data": {
+        "mobile": 9876567876,
+        "name": null,
+        "service_code": "{{service_code_invalid}}"
+      },
+      "expected": {
+        "status": [
+          400,
+          404
+        ]
+      }
+    }
+  ],
+  "workflow_scenarios": [
+    {
+      "name": "RESOLVE from PENDING_FOR_ASSIGNMENT (Skip State)",
+      "type": "negative",
+      "from_state": "PENDING_FOR_ASSIGNMENT",
+      "action": "RESOLVE",
+      "expected": {
+        "status": [
+          400,
+          403,
+          500
+        ]
+      }
+    },
+    {
+      "name": "ASSIGN from RESOLVED (Already Complete)",
+      "type": "negative",
+      "from_state": "RESOLVED",
+      "action": "ASSIGN",
+      "expected": {
+        "status": [
+          400,
+          403,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Unknown Action",
+      "type": "negative",
+      "from_state": "PENDING_FOR_ASSIGNMENT",
+      "action": "UNKNOWN_ACTION_XYZ",
+      "expected": {
+        "status": [
+          400,
+          404,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Empty Action",
+      "type": "negative",
+      "from_state": "PENDING_FOR_ASSIGNMENT",
+      "action": "",
+      "expected": {
+        "status": [
+          400,
+          422,
+          500
+        ]
+      }
+    },
+    {
+      "name": "Non-existent Application Number",
+      "type": "negative",
+      "application_number": "NON-EXISTENT-APP-99999",
+      "action": "ASSIGN",
+      "expected": {
+        "status": [
+          400,
+          404,
+          500
+        ]
+      }
+    }
+  ],
+  "checklist_scenarios": [
+    {
+      "name": "SingleValueList Wrong Option",
+      "type": "negative",
+      "attributes": [
+        {
+          "code": "Is user verified",
+          "dataType": "SingleValueList",
+          "value": "maybe"
+        }
+      ],
+      "expected": {
+        "status": [
+          400
+        ]
+      }
+    },
+    {
+      "name": "Wrong DataType (Text instead of SingleValueList)",
+      "type": "negative",
+      "attributes": [
+        {
+          "code": "Is user verified",
+          "dataType": "Text",
+          "value": "yes"
+        }
+      ],
+      "expected": {
+        "status": [
+          400
+        ]
+      }
+    },
+    {
+      "name": "Empty Attributes Array",
+      "type": "negative",
+      "attributes": [],
+      "expected": {
+        "status": [
+          400
+        ]
+      }
+    },
+    {
+      "name": "Non-existent Attribute Code",
+      "type": "negative",
+      "attributes": [
+        {
+          "code": "Non Existent XYZ",
+          "dataType": "Text",
+          "value": "test"
+        }
+      ],
+      "expected": {
+        "status": [
+          400,
+          404
+        ]
+      }
+    },
+    {
+      "name": "Non-existent Service Definition ID",
+      "type": "negative",
+      "service_def_id": "non-existent-def-12345",
+      "attributes": [
+        {
+          "code": "Is user verified",
+          "dataType": "SingleValueList",
+          "value": "yes"
+        }
+      ],
+      "expected": {
+        "status": [
+          400,
+          404
+        ]
+      }
+    },
+    {
+      "name": "Non-existent Account ID",
+      "type": "negative",
+      "account_id": "non-existent-account-12345",
+      "attributes": [
+        {
+          "code": "Is user verified",
+          "dataType": "SingleValueList",
+          "value": "yes"
+        }
+      ],
+      "expected": {
+        "status": [
+          400,
+          404
+        ]
+      }
+    }
+  ],
+  "search_scenarios": [
+    {
+      "name": "Non-existent Application Number",
+      "type": "negative",
+      "criteria": {
+        "applicationNumber": "NON-EXISTENT-APP-99999999"
+      },
+      "expected": {
+        "min_results": 0,
+        "max_results": 0
+      }
+    },
+    {
+      "name": "Non-existent Mobile Number",
+      "type": "negative",
+      "criteria": {
+        "mobileNumber": "0000000000"
+      },
+      "expected": {
+        "min_results": 0,
+        "max_results": 0
+      }
+    },
+    {
+      "name": "Non-existent Service Code",
+      "type": "negative",
+      "criteria": {
+        "serviceCode": "NON-EXISTENT-SERVICE-12345"
+      },
+      "expected": {
+        "min_results": 0,
+        "max_results": 0
+      }
+    },
+    {
+      "name": "Invalid Mobile Format (Letters)",
+      "type": "negative",
+      "criteria": {
+        "mobileNumber": "abcdefghij"
+      },
+      "expected": {
+        "min_results": 0,
+        "max_results": 0
+      }
+    }
+  ]
+}

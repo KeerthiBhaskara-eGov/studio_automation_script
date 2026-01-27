@@ -1,17 +1,21 @@
 def get_request_info(token: str) -> dict:
     return {
         "apiId": "Rainmaker",
-        "ver": "1.0",
-        "ts": 0,
-        "action": "create",
-        "msgId": "1764742386562",
         "authToken": token,
+        "ver": "",
+        "ts": 0,
+        "resMsgId": "",
+        "msgId": "",
+        "status": "",
         "userInfo": {
-            "id": 120641,
-            "userName": "SUPERUSER",
-            "type": "EMPLOYEE",
+            "id": 120840,
             "uuid": "f7ff59df-f78f-4b98-adc4-6b0561594a62",
-            "tenantId": "st",
+            "userName": "SUPERUSER",
+            "name": "SUPERUSER",
+            "mobileNumber": "7349125127",
+            "emailId": "",
+            "locale": None,
+            "type": "EMPLOYEE",
             "roles": [
                 
             {
@@ -39,7 +43,10 @@ def get_request_info(token: str) -> dict:
                 "code": "HRMS_ADMIN",
                 "tenantId": "st"
             }
-        
-            ]
+
+            ],
+            "active": False,
+            "tenantId": "st",
+            "permanentCity": None
         }
     }
