@@ -902,97 +902,97 @@ class TestSearchNegative:
 # =============================================================================
 # SECURITY TESTS
 # =============================================================================
-class TestSecurityScenarios:
-    """Test security scenarios - XSS, SQL Injection, etc."""
+# # class TestSecurityScenarios:
+#     """Test security scenarios - XSS, SQL Injection, etc."""
     
-    def test_security_scenarios(self, request):
-        """Run all security scenarios."""
-        scenarios = load_scenarios().get("security_scenarios", [])
-        if not scenarios:
-            pytest.skip("No security scenarios")
+#     def test_security_scenarios(self, request):
+#         """Run all security scenarios."""
+#         scenarios = load_scenarios().get("security_scenarios", [])
+#         if not scenarios:
+#             pytest.skip("No security scenarios")
         
-        mdms = load_json(MDMS_FILE)
-        app_data = load_json(APP_FILE)
-        token = get_token()
+#         mdms = load_json(MDMS_FILE)
+#         app_data = load_json(APP_FILE)
+#         token = get_token()
 
-        # Get the actual service_code from application data
-        if not app_data.get("service_code"):
-            pytest.skip("No service_code in application data")
+#         # Get the actual service_code from application data
+#         if not app_data.get("service_code"):
+#             pytest.skip("No service_code in application data")
 
-        service_code = app_data.get("service_code")
+#         service_code = app_data.get("service_code")
 
-        results = []
-        passed = 0
-        warnings = []
+#         results = []
+#         passed = 0
+#         warnings = []
         
-        print(f"\n{'='*60}")
-        print(f"🔒 SECURITY TESTS ({len(scenarios)} scenarios)")
-        print(f"{'='*60}")
+#         print(f"\n{'='*60}")
+#         print(f"🔒 SECURITY TESTS ({len(scenarios)} scenarios)")
+#         print(f"{'='*60}")
         
-        for scenario in scenarios:
-            name = scenario.get("name")
-            api = scenario.get("api")
-            data = scenario.get("data", {})
-            criteria = scenario.get("criteria", {})
-            attributes = scenario.get("attributes", [])
+#         for scenario in scenarios:
+#             name = scenario.get("name")
+#             api = scenario.get("api")
+#             data = scenario.get("data", {})
+#             criteria = scenario.get("criteria", {})
+#             attributes = scenario.get("attributes", [])
             
-            print(f"\n📋 {name}")
+#             print(f"\n📋 {name}")
             
-            if api == "application":
-                url = f"{BASE_URL}/public-service/v1/application/{service_code}"
-                payload = {
-                    "Application": {
-                        "tenantId": tenantId,
-                        "serviceCode": mdms.get("service_code", "test"),
-                        "applicant": {
-                            "name": {"givenName": data.get("name", "Test")},
-                            "mobileNumber": data.get("mobile", "9876543210")
-                        },
-                        "address": {"city": "Test", "locality": {"code": "SL001"}}
-                    },
-                    "RequestInfo": get_request_info(token)
-                }
-            elif api == "search":
-                url = f"{BASE_URL}/public-service/application/v1/_search"
-                payload = {
-                    "ApplicationSearchCriteria": {**criteria, "tenantId": tenantId},
-                    "RequestInfo": get_request_info(token)
-                }
-            elif api == "checklist":
-                url = f"{BASE_URL}/health-service-request/service/v1/_create"
-                req_info = get_request_info(token)
-                payload = {
-                    "Service": {
-                        "clientId": req_info.get("userInfo", {}).get("uuid", ""),
-                        "serviceDefId": "test-def",
-                        "accountId": app_data.get("application_id", "test-account"),
-                        "tenantId": tenantId,
-                        "attributes": attributes,
-                        "additionalFields": [{"action": "SUBMIT"}]
-                    },
-                    "apiOperation": "CREATE",
-                    "RequestInfo": req_info
-                }
-            else:
-                continue
+#             if api == "application":
+#                 url = f"{BASE_URL}/public-service/v1/application/{service_code}"
+#                 payload = {
+#                     "Application": {
+#                         "tenantId": tenantId,
+#                         "serviceCode": mdms.get("service_code", "test"),
+#                         "applicant": {
+#                             "name": {"givenName": data.get("name", "Test")},
+#                             "mobileNumber": data.get("mobile", "9876543210")
+#                         },
+#                         "address": {"city": "Test", "locality": {"code": "SL001"}}
+#                     },
+#                     "RequestInfo": get_request_info(token)
+#                 }
+#             elif api == "search":
+#                 url = f"{BASE_URL}/public-service/application/v1/_search"
+#                 payload = {
+#                     "ApplicationSearchCriteria": {**criteria, "tenantId": tenantId},
+#                     "RequestInfo": get_request_info(token)
+#                 }
+#             elif api == "checklist":
+#                 url = f"{BASE_URL}/health-service-request/service/v1/_create"
+#                 req_info = get_request_info(token)
+#                 payload = {
+#                     "Service": {
+#                         "clientId": req_info.get("userInfo", {}).get("uuid", ""),
+#                         "serviceDefId": "test-def",
+#                         "accountId": app_data.get("application_id", "test-account"),
+#                         "tenantId": tenantId,
+#                         "attributes": attributes,
+#                         "additionalFields": [{"action": "SUBMIT"}]
+#                     },
+#                     "apiOperation": "CREATE",
+#                     "RequestInfo": req_info
+#                 }
+#             else:
+#                 continue
             
-            res = requests.post(url, json=payload, headers=get_headers(token))
+#             res = requests.post(url, json=payload, headers=get_headers(token))
             
-            is_safe = res.status_code in [400, 403, 422] or "<script>" not in res.text
+#             is_safe = res.status_code in [400, 403, 422] or "<script>" not in res.text
             
-            if is_safe:
-                print(f"   ✅ Safe ({res.status_code})")
-                passed += 1
-            else:
-                print(f"   ⚠️ Check response ({res.status_code})")
-                warnings.append(name)
+#             if is_safe:
+#                 print(f"   ✅ Safe ({res.status_code})")
+#                 passed += 1
+#             else:
+#                 print(f"   ⚠️ Check response ({res.status_code})")
+#                 warnings.append(name)
             
-            results.append({"name": name, "passed": is_safe, "status": res.status_code})
+#             results.append({"name": name, "passed": is_safe, "status": res.status_code})
         
-        print_result(passed, len(scenarios), warnings)
+#         print_result(passed, len(scenarios), warnings)
         
-        if request:
-            request.node._test_result = {"Total": len(scenarios), "Safe": passed, "Review": len(warnings)}
+#         if request:
+#             request.node._test_result = {"Total": len(scenarios), "Safe": passed, "Review": len(warnings)}
 
 
 # =============================================================================

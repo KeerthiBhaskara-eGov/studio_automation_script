@@ -666,15 +666,6 @@ xdg-open reports/e2e_report.html  # Linux
 
 ---
 
-## Resources
-
-- [DIGIT Platform Documentation](https://core.digit.org/)
-- [DIGIT Studio Guide](https://core.digit.org/guides/developer-guide/digit-studio)
-- [Pytest Documentation](https://docs.pytest.org/)
-- [Python Requests Library](https://requests.readthedocs.io/)
-
----
-
 ## Contributing
 
 To contribute:
