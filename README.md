@@ -11,8 +11,6 @@ This test suite automates the complete DIGIT Studio workflow from MDMS (Master D
 - **Data-Driven Negative Tests**: Security, boundary, and validation testing using configurable scenarios
 - **Automated Wait Handling**: Smart 15-minute wait after service initialization
 - **HTML Reporting**: Detailed test reports with execution summaries
-- **CI/CD Ready**: Easily integrated into Jenkins, GitHub Actions, GitLab CI
-
 ---
 
 ## Quick Start
@@ -455,32 +453,6 @@ pytest tests/test_application.py::test_application_create -vv -s --tb=long
 ```
 
 ---
-
-## FAQ
-
-**Q: How long does the full E2E test take?**
-A: ~20-25 minutes, including the mandatory 15-minute wait.
-
-**Q: Can I run tests in parallel?**
-A: No for E2E flow. Tests must run sequentially due to dependencies.
-
-**Q: Why the 15-minute wait?**
-A: Backend needs time to process MDMS configuration, create workflows, set up actions, and propagate changes.
-
-**Q: Can I test against production?**
-A: **No.** This suite creates data. Use only in UAT/QA environments.
-
-**Q: What data gets created?**
-A: MDMS service configuration, applications, checklists, individuals, process instances, and localization keys. Data persists after tests.
-
-**Q: How do I customize the service?**
-A: Edit `payloads/mdms/mdms_draft_create.json` and `payloads/mdms/mdms_service_create.json`.
-
-**Q: What if a test fails midway?**
-A: Check HTML report for error details, review output files, manually clean up created services, and re-run from the beginning.
-
----
-
 ## Test Summary
 
 ### E2E Tests (test_e2e_flow.py)
@@ -529,65 +501,6 @@ A: Check HTML report for error details, review output files, manually clean up c
 | `test_inbox_search.py` | 1 | Inbox verification |
 
 **Run commands:** See [Section 2: Test Modules](#2-test-modules-by-category), [Section 5: Service Tests](#5-service-tests-module), [Section 6: Application Tests](#6-application-tests-module), and [Section 7: Verification Tests](#7-verificationsearch-tests) for detailed commands.
-
----
-
-## CI/CD Integration
-
-### GitHub Actions
-
-```yaml
-name: DIGIT Studio E2E Tests
-
-on:
-  push:
-    branches: [ main, develop ]
-  schedule:
-    - cron: '0 2 * * *'
-
-jobs:
-  e2e-tests:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-    - run: pip install -r requirements.txt
-    - run: |
-        cat > .env << EOF
-        BASE_URL=${{ secrets.BASE_URL }}
-        USERNAME=${{ secrets.USERNAME }}
-        PASSWORD=${{ secrets.PASSWORD }}
-        TENANTID=st
-        USERTYPE=EMPLOYEE
-        EOF
-    - run: pytest test_e2e_flow.py -v -s --html=reports/e2e_report.html --self-contained-html
-    - uses: actions/upload-artifact@v3
-      if: always()
-      with:
-        name: test-results
-        path: |
-          reports/
-          output/
-```
-
-### Docker
-
-```dockerfile
-FROM python:3.10-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-CMD ["pytest", "test_e2e_flow.py", "-v", "-s", "--html=reports/e2e_report.html", "--self-contained-html"]
-```
-
-```bash
-# Build and run
-docker build -t digit-studio-tests .
-docker run --env-file .env -v $(pwd)/reports:/app/reports digit-studio-tests
-```
 
 ---
 
@@ -663,30 +576,3 @@ cat output/application_response.json | jq .
 open reports/e2e_report.html  # macOS
 xdg-open reports/e2e_report.html  # Linux
 ```
-
----
-
-## Contributing
-
-To contribute:
-1. Create feature branch: `git checkout -b feature/your-feature`
-2. Make changes (follow PEP 8 style guide)
-3. Test: `pytest test_e2e_flow.py -v -s`
-4. Commit: `git commit -m "Add: description"`
-5. Create pull request with test results
-
----
-
-## License
-
-**Internal use only - eGovernments Foundation / DIGIT**
-
-This automation suite is for internal use by eGovernments Foundation and authorized DIGIT platform partners. Provided "as is" without warranty.
-
----
-
-**Version:** 1.0.0
-**Last Updated:** 2026-01-27
-**Maintained By:** eGovernments Foundation QA Team
-
-For support, contact the DIGIT Studio team or refer to internal documentation.
