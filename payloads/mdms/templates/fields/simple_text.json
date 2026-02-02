@@ -1,0 +1,29 @@
+{
+  "name": "BasicDetails",
+  "type": "object",
+  "label": "Basic Details",
+  "properties": [
+    {
+      "name": "title",
+      "type": "string",
+      "label": "Title",
+      "format": "text",
+      "disable": false,
+      "required": true,
+      "orderNumber": 1,
+      "defaultValue": "",
+      "errorMessage": "Title is required"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "label": "Description",
+      "format": "textarea",
+      "disable": false,
+      "required": false,
+      "orderNumber": 2,
+      "defaultValue": "",
+      "errorMessage": ""
+    }
+  ]
+}

@@ -1094,6 +1094,103 @@
   ],
   "application_scenarios": [
     {
+      "name": "Missing All Required Fields",
+      "type": "negative",
+      "data": {},
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Empty Request Body",
+      "type": "negative",
+      "data": {
+        "_empty_body": true
+      },
+      "expected": {
+        "status": [
+          400,
+          422,
+          401
+        ]
+      }
+    },
+    {
+      "name": "Missing Mobile and Name",
+      "type": "negative",
+      "data": {
+        "mobile": null,
+        "name": null
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Missing Service Code",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "service_code": null
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Empty Service Code",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "service_code": ""
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Missing Name Field",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": null
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Empty Name Field",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": ""
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
       "name": "Empty Mobile Number",
       "type": "negative",
       "data": {
@@ -1194,6 +1291,610 @@
         "status": [
           400,
           404
+        ]
+      }
+    },
+    {
+      "name": "Invalid Pincode - Starts with Zero",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "address": {
+          "pincode": "012345"
+        }
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Pincode - Only 5 Digits",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "address": {
+          "pincode": "12345"
+        }
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Pincode - 7 Digits",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "address": {
+          "pincode": "1234567"
+        }
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Pincode - Contains Letters",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "address": {
+          "pincode": "12345A"
+        }
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Pincode - Special Characters",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "address": {
+          "pincode": "123-456"
+        }
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Pincode - All Zeros",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "address": {
+          "pincode": "000000"
+        }
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Email - Missing @ Symbol",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "email": "testuser.example.com"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Email - Missing Domain",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "email": "testuser@"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Email - Missing Username",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "email": "@example.com"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Email - Missing TLD",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "email": "testuser@example"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Email - Double @ Symbol",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "email": "test@@example.com"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Email - Spaces in Email",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "email": "test user@example.com"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Email - Invalid Characters",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "email": "test!user#@example.com"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Email - TLD Too Short",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "email": "testuser@example.c"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Email - Consecutive Dots",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "email": "test..user@example.com"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Mobile Number as String",
+      "type": "negative",
+      "data": {
+        "mobile": "9876543210",
+        "name": "Test User"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Mobile Number as Boolean",
+      "type": "negative",
+      "data": {
+        "mobile": true,
+        "name": "Test User"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Mobile Number as Array",
+      "type": "negative",
+      "data": {
+        "mobile": [9876543210],
+        "name": "Test User"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Mobile Number as Object",
+      "type": "negative",
+      "data": {
+        "mobile": {
+          "number": 9876543210
+        },
+        "name": "Test User"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Name as Number",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": 12345
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Name as Boolean",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": false
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Name as Array",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": ["Test", "User"]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Name as Object",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": {
+          "first": "Test",
+          "last": "User"
+        }
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Service Code as Number",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "service_code": 12345
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Service Code as Boolean",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "service_code": true
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Service Code as Array",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "service_code": ["service", "code"]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Latitude as String",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "address": {
+          "latitude": "21.88189",
+          "longitude": 79.40918
+        }
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Longitude as Boolean",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "address": {
+          "latitude": 21.88189,
+          "longitude": true
+        }
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Address as String",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "address": "123 Main Street"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Address as Array",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "address": ["123 Main Street", "City"]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Active Status as String",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "active": "true"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Active Status as Number",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "active": 1
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Applicants as String",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "applicants": "John Doe"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Applicants as Object",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "applicants": {
+          "name": "John Doe"
+        }
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Documents as String",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "documents": "document.pdf"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Service Details as String",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "service_details": "Some details"
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Service Details as Array",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "service_details": ["detail1", "detail2"]
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Tenant ID as Number",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "tenant_id": 12345
+      },
+      "expected": {
+        "status": [
+          400,
+          422
+        ]
+      }
+    },
+    {
+      "name": "Invalid Type - Workflow Action as Number",
+      "type": "negative",
+      "data": {
+        "mobile": 9876543210,
+        "name": "Test User",
+        "workflow": {
+          "action": 123
+        }
+      },
+      "expected": {
+        "status": [
+          400,
+          422
         ]
       }
     }
